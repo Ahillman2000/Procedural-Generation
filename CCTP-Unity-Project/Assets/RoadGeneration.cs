@@ -6,19 +6,24 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class RoadGeneration : MonoBehaviour
 {
-    [SerializeField] private GameObject roadPoint1, roadPoint2;
+    [SerializeField] private GameObject[] roadPointObjects;
+    private Vector3[] roadPointPositions;
+    [SerializeField] private Material roadMaterial;
 
     //[Range(0.5f, 1.5f)] private float spacing = 1.0f;
-    [SerializeField] private float roadWidth = 1.0f;
+    [SerializeField] private float roadWidth;
 
     void Start()
     {
-        Vector3[] _points = new Vector3[2];
+        roadPointPositions = new Vector3[roadPointObjects.Length];
 
-        _points[0] = roadPoint1.transform.position;
-        _points[1] = roadPoint2.transform.position;
+        for (int i = 0; i < roadPointPositions.Length; i++)
+        {
+            roadPointPositions[i] = roadPointObjects[i].transform.position;
+        }
 
-        this.GetComponent<MeshFilter>().mesh = CreateRoadMesh(_points);
+        this.GetComponent<MeshFilter>().mesh = CreateRoadMesh(roadPointPositions);
+        this.GetComponent<MeshRenderer>().material = roadMaterial;
     }
 
     /*private void GenerateRoad()
@@ -42,23 +47,22 @@ public class RoadGeneration : MonoBehaviour
 
         for (int i = 0; i < points.Length; i++)
         {
-            /*Vector3 forward = Vector3.zero;
+            Vector3 forward = Vector3.zero;
             if (i < points.Length - 1)
             {
-                forward += points[i - 1] - points[i];
+                forward += points[i + 1] - points[i];
             }
             if(i > 0)
             {
                 forward += points[i] - points[i - 1];
             }
-            forward.Normalize();*/
+            forward.Normalize();
+            Vector3 left = new Vector3(-forward.z, 0, forward.x);
 
-            Vector3 forward = Vector3.zero;
+            vertices[vertexIndex]     = points[i] + 0.5f * roadWidth * left;
+            vertices[vertexIndex + 1] = points[i] - 0.5f * roadWidth * left;
 
-            vertices[vertexIndex]     = points[i] + 0.5f * roadWidth * forward;
-            vertices[vertexIndex + 1] = points[i] - 0.5f * roadWidth * forward;
-
-            if(i < points.Length - 1)
+            if (i < points.Length - 1)
             {
                 triangles[triangleIndex]     = vertexIndex;
                 triangles[triangleIndex + 1] = vertexIndex + 2;
