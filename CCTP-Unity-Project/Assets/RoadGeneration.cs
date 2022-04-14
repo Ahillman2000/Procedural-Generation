@@ -6,20 +6,46 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class RoadGeneration : MonoBehaviour
 {
-    [SerializeField] private GameObject[] roadPointObjects;
-    private Vector3[] roadPointPositions;
+    [SerializeField] private Vector3[] roadPointPositions;
     [SerializeField] private Material roadMaterial;
 
     //[Range(0.5f, 1.5f)] private float spacing = 1.0f;
     [SerializeField] private float roadWidth;
 
+    [SerializeField] int numberOfRoadPoints;
+
+    [SerializeField] int roadDeviation = 10;
+
+    Vector3 forward;
+
     void Start()
     {
-        roadPointPositions = new Vector3[roadPointObjects.Length];
+
+        numberOfRoadPoints = Random.Range(2, 100);
+        roadPointPositions = new Vector3[numberOfRoadPoints];
+
+        /*int index = 0;
+        foreach (Vector3 roadPoint in roadPointPositions)
+        {
+            roadPoint = new Vector3(index, index, index);
+        }*/
+
+        Vector3 lastPositon = new Vector3();
 
         for (int i = 0; i < roadPointPositions.Length; i++)
         {
-            roadPointPositions[i] = roadPointObjects[i].transform.position;
+            //roadPointPositions[i] = new Vector3(Random.Range(), 0, i * 10);
+            if(i == 0)
+            {
+                roadPointPositions[i] = new Vector3(0, 0, 0);
+            }
+            else
+            {
+                roadPointPositions[i] = new Vector3(lastPositon.x + Random.Range(-roadDeviation, roadDeviation + 1), 0, lastPositon.z + Random.Range(-roadDeviation, roadDeviation + 1));
+                forward += roadPointPositions[i] - roadPointPositions[i - 1];
+            }
+            lastPositon = roadPointPositions[i];
+
         }
 
         this.GetComponent<MeshFilter>().mesh = CreateRoadMesh(roadPointPositions);
