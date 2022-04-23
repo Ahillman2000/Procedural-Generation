@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
+/*[RequireComponent(typeof(SpriteRenderer))]
 public class VoronoiGenerator : MonoBehaviour
 {
     [SerializeField] Vector2Int imageDimension;
@@ -72,5 +72,76 @@ public class VoronoiGenerator : MonoBehaviour
     void Update()
     {
 
+    }
+}*/
+
+public class VoronoiEdge
+{
+    public Vector3 v1;
+    public Vector3 v2;
+
+    public Vector3 sitePosition;
+
+    public VoronoiEdge(Vector3 v1,Vector3 v2, Vector3 sitePositon)
+    {
+        this.v1 = v1;
+        this.v2 = v2;
+        this.sitePosition = sitePositon;
+    }
+}
+
+public class VoronoiCell
+{
+    public Vector3 sitePosition;
+
+    public List<VoronoiEdge> edges = new List<VoronoiEdge>();
+
+    public VoronoiCell(Vector3 sitePositition)
+    {
+        this.sitePosition = sitePositition;
+    }
+}
+
+public class DelaunayToVoronoi
+{
+    public static List<VoronoiCell> GenerateVoronoiDiagram(List<Vector3> sites)
+    {
+        List<Triangle> triangles = 
+    }
+}
+
+public class VoronoiGenerator : MonoBehaviour
+{
+    [SerializeField] int seed = 0;
+
+    [SerializeField] float halfMapSize = 10f;
+
+    [SerializeField] int numberOfPoints = 20;
+
+    private void OnDrawGizmos()
+    {
+        List<Vector3> randomSites = new List<Vector3>();
+
+        Random.InitState(seed);
+
+        float min = -halfMapSize;
+        float max =  halfMapSize;
+
+        for (int i = 0; i < numberOfPoints; i++)
+        {
+            float randomX = Random.Range(min, max);
+            float randomZ = Random.Range(min, max);
+
+            randomSites.Add( new Vector3(randomX, 0, randomZ));
+        }
+
+        float bigSize = halfMapSize * 5f;
+
+        randomSites.Add( new Vector3(0, 0, bigSize));
+        randomSites.Add(new Vector3(0, 0, -bigSize));
+        randomSites.Add(new Vector3(bigSize, 0, 0));
+        randomSites.Add(new Vector3(-bigSize, 0, 0));
+
+        List<VoronoiCell> cells = Dela
     }
 }
