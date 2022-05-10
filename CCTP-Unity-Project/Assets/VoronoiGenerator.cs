@@ -106,7 +106,9 @@ public class DelaunayToVoronoi
 {
     public static List<VoronoiCell> GenerateVoronoiDiagram(List<Vector3> sites)
     {
-        List<Triangle> triangles = 
+        List<Triangle> triangles = Delaunay.TriangulateByFlippingEdges(sites);
+
+        return null;
     }
 }
 
@@ -142,6 +144,6 @@ public class VoronoiGenerator : MonoBehaviour
         randomSites.Add(new Vector3(bigSize, 0, 0));
         randomSites.Add(new Vector3(-bigSize, 0, 0));
 
-        List<VoronoiCell> cells = Dela
+        //List<VoronoiCell> cells = Dela
     }
 }

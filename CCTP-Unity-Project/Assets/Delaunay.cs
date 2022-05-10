@@ -34,6 +34,42 @@ public class Delaunay
         return determinant;
     }
 
+    public static bool IsQuadrilateralConvex(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+    {
+        bool isConvex = false;
+
+        bool abc = IsTriangleOrientedClockwise(a, b, c);
+        bool abd = IsTriangleOrientedClockwise(a, b, d);
+        bool bcd = IsTriangleOrientedClockwise(b, c, d);
+        bool cad = IsTriangleOrientedClockwise(c, a, d);
+
+        if(abc && abd && bcd &! cad)
+        {
+            isConvex = true;
+        }
+        else if(abc && abd && !bcd & cad)
+        {
+            isConvex = true;
+        }
+        else if (abc && !abd && bcd & cad)
+        {
+            isConvex = true;
+        }
+        else if (!abc && !abd && !bcd & cad)
+        {
+            isConvex = true;
+        }
+        else if (!abc && !abd && bcd &!cad)
+        {
+            isConvex = true;
+        }
+        else if (!abc && abd && !bcd &! cad)
+        {
+            isConvex = true;
+        }
+        return isConvex;
+    }
+
     public static void OrientTrianglesClockwise(List<Triangle> triangles)
     {
         foreach (var triangle in triangles)
@@ -106,6 +142,71 @@ public class Delaunay
         return halfEdges;
     }
 
+    private static void FlipEdge(HalfEdge one)
+    {
+        HalfEdge two  = one.nextEdge;
+        HalfEdge three = one.previousEdge;
+
+        HalfEdge four = one.opositeEdge;
+        HalfEdge five = one.opositeEdge.nextEdge;
+        HalfEdge six  = one.opositeEdge.previousEdge;
+
+        Vertex a = one.vertex;
+        Vertex b = two.vertex;
+        Vertex c = three.vertex;
+        Vertex d = five.vertex;
+
+        a.halfEdge = two;
+        c.halfEdge = five;
+
+        one.nextEdge     = three;
+        one.previousEdge = five;
+
+        two.nextEdge     = four;
+        two.previousEdge = six;
+
+        three.nextEdge     = five;
+        three.previousEdge = one;
+
+        four.nextEdge     = six;
+        four.previousEdge = two;
+
+        five.nextEdge     = one;
+        five.previousEdge = three;
+
+        six.nextEdge     = two;
+        six.previousEdge = four;
+
+        one.vertex   = b;
+        two.vertex   = b;
+        three.vertex = c;
+        four.vertex  = d;
+        five.vertex  = d;
+        six.vertex   = a;
+
+        Triangle t1 = one.triangle;
+        Triangle t2 = four.triangle;
+
+        one.triangle   = t1;
+        three.triangle = t1;
+        five.triangle  = t1;
+
+        two.triangle  = t2;
+        four.triangle = t2;
+        six.triangle  = t2;
+
+        t1.v1 = b;
+        t1.v2 = c;
+        t1.v3 = d;
+
+        t2.v1 = b;
+        t2.v2 = d;
+        t2.v3 = a;
+
+        t1.halfEdge = three;
+        t2.halfEdge = four;
+    }
+
     public static List<Triangle> TriangulateByFlippingEdges(List<Vector3> sites)
     {
         List<Vertex> vertices = new List<Vertex>();
@@ -151,14 +252,29 @@ public class Delaunay
                 Vector2 cPos = c.GetPos2D_XZ();
                 Vector2 dPos = d.GetPos2D_XZ();
 
-                if (PointPositonRelativeToCircle(bPos, cPos, dPos, aPos) < 0f) continue;
+                if (PointPositonRelativeToCircle(bPos, cPos, dPos, aPos) < 0f)
+                {
+                    if(IsQuadrilateralConvex(aPos, bPos, cPos, dPos))
+                    {
+                        if(PointPositonRelativeToCircle(bPos, cPos, dPos, aPos) < 0f)
+                        {
+                            continue;
+                        }
 
-                flippedEdges++;
+                        flippedEdges++;
 
-                hasFlippedEdge = true;
+                        hasFlippedEdge = true;
 
-                Flip
+                        FlipEdge(thisEdge);
+                    }
+                }
+            }
+
+            if(!hasFlippedEdge)
+            {
+                break;
             }
         }
+        return triangles;
     }
 }
