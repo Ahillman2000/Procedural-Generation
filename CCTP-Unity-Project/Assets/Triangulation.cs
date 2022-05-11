@@ -75,6 +75,11 @@ public static class Triangulation
                     triangles.Add(newTri);
                 }
             }
+
+            for (int l = 0; l < newEdges.Count; l++)
+            {
+                edges.Add(newEdges[l]);
+            }
         }
         return triangles;
     }
