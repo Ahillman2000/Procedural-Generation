@@ -48,9 +48,9 @@ namespace WaveFunctionCollapse
             TileBase[][] gridOfInputTiles = null;
             gridOfInputTiles = MyCollectionExtensions.CreateJaggedArray<TileBase[][]>(imageParameters.Height, imageParameters.Width);
 
-            for (int row = 0; row < imageParameters.Width; row++)
+            for (int row = 0; row < imageParameters.Height; row++)
             {
-                for (int col = 0; col < imageParameters.Height; col++)
+                for (int col = 0; col < imageParameters.Width; col++)
                 {
                     gridOfInputTiles[row][col] = imageParameters.StackOfTiles.Dequeue().Tile;
                 }
