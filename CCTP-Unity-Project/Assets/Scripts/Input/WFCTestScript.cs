@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -14,20 +16,17 @@ public class WFCTestScript : MonoBehaviour
         InputReader reader = new InputReader(input);
         var grid = reader.ReadInputToGrid();
 
-        /*for (int row = 0; row < grid.Length; row++)
-        {
-            for (int col = 0; col < grid[0].Length; col++)
-            {
-                Debug.Log("Row: " + row + ", Column: " + col + " tile name " + grid[row][col].Value.name);
-            }
-        }*/
-
         ValuesManager<TileBase> valueManager = new ValuesManager<TileBase>(grid);
-        StringBuilder builder = null;
-        List<string> list = new List<string>();
+        PatternManager manager = new PatternManager(2);
+        manager.ProcessGrid(valueManager, false);
+        foreach (Direction direction in Enum.GetValues(typeof(Direction)))
+        {
+            Debug.Log(direction.ToString() + " " + string.Join(" ", manager.GetPossibleNeighboursForPatternInDirection(0, direction).ToArray()));
+        }
 
-        Debug.Log("number of rows: " + grid.Length);
-        Debug.Log("number of coloumns: " + grid[0].Length);
+        // debugger for value manager identiying correct values in grid
+        /*StringBuilder builder = null;
+        List<string> list = new List<string>();
 
         for (int row = -1; row <= grid.Length; row++)
         {
@@ -39,13 +38,12 @@ public class WFCTestScript : MonoBehaviour
             list.Add(builder.ToString());
         }
 
-        Debug.Log("list size = " + list.Count);
-
         list.Reverse();
         foreach (var item in list)
         {
             Debug.Log(item);
-        }
+        }*/
+
     }
 
 

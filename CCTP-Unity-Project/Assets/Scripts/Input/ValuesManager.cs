@@ -9,7 +9,7 @@ namespace WaveFunctionCollapse
 {
     public class ValuesManager<T>
     {
-        int[][] _grid;
+        int[][] grid;
         Dictionary<int, IValue<T>> valueIndexDictionary = new Dictionary<int, IValue<T>>();
         int index = 0;
 
@@ -20,7 +20,7 @@ namespace WaveFunctionCollapse
 
         private void CreateGridOfIndices(IValue<T>[][] _gridOfValues)
         {
-            _grid = MyCollectionExtensions.CreateJaggedArray<int[][]>(_gridOfValues.Length, _gridOfValues[0].Length);
+            grid = MyCollectionExtensions.CreateJaggedArray<int[][]>(_gridOfValues.Length, _gridOfValues[0].Length);
             for (int row = 0; row < _gridOfValues.Length; row++)
             {
                 for (int col = 0; col < _gridOfValues[0].Length; col++)
@@ -30,28 +30,37 @@ namespace WaveFunctionCollapse
             }
         }
 
+        internal Vector2 getGridSize()
+        {
+            if(grid == null)
+            {
+                return Vector2.zero;
+            }
+            return new Vector2(grid[0].Length, grid.Length);
+        }
+
         private void SetIndexToGridPosition(IValue<T>[][] gridOfValues, int row, int col)
         {
             if(valueIndexDictionary.ContainsValue(gridOfValues[row][col]))
             {
                 var key = valueIndexDictionary.FirstOrDefault(x => x.Value.Equals(gridOfValues[row][col]));
-                _grid[row][col] = key.Key;
+                grid[row][col] = key.Key;
             }
             else
             {
-                _grid[row][col] = index;
-                valueIndexDictionary.Add(_grid[row][col], gridOfValues[row][col]);
+                grid[row][col] = index;
+                valueIndexDictionary.Add(grid[row][col], gridOfValues[row][col]);
                 index++;
             }
         }
 
         public int GetGridValue(int x, int y)
         {
-            if(x >= _grid[0].Length || y >= _grid.Length || x < 0 || y < 0)
+            if(x >= grid[0].Length || y >= grid.Length || x < 0 || y < 0)
             {
                 throw new System.IndexOutOfRangeException("Grid doesnt contain x:" + x + ", y: " + y + "value");
             }
-            return _grid[y][x];
+            return grid[y][x];
         }
 
         public IValue<T> GetValueFromIndex(int _index)
@@ -65,8 +74,8 @@ namespace WaveFunctionCollapse
 
         public int GetGridValuesIncludingOffset(int x, int y)
         {
-            int yMax = _grid.Length;
-            int xMax = _grid[0].Length;
+            int yMax = grid.Length;
+            int xMax = grid[0].Length;
 
             if(x < 0 && y < 0)
             {

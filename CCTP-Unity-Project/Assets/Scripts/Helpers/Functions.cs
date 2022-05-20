@@ -28,6 +28,21 @@ namespace Helpers
 
             return array;
         }
+
+        public static bool CheckJaggedArray2IfIndexIsValid<T>(this T[][] array, int x, int y)
+        {
+            if(array == null)
+            {
+                return false;
+            }
+            return ValidateCoords(x, y, array[0].Length, array.Length);
+        }
+
+        public static bool ValidateCoords(int x, int y, int width, int height)
+        {
+            if (x < 0 || x >= width || y < 0 || y >= height) return false;
+            return true;
+        }
     }
 }
 
