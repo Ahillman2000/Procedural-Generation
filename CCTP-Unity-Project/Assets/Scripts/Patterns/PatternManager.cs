@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using Helpers;
 
 namespace WaveFunctionCollapse
 {
@@ -82,6 +83,59 @@ namespace WaveFunctionCollapse
         public int GetNumberOfPatterns()
         {
             return patternDataIndexDictionary.Count;
+        }
+
+        internal int[][] ConvertPatternToValues<T>(int[][] outputValues)
+        {
+            int patternOutputWidth  = outputValues[0].Length;
+            int patternOutputHeight = outputValues.Length;
+
+            int valueGridWidth  = patternOutputWidth  + patternSize - 1;
+            int valueGridHeight = patternOutputHeight + patternSize - 1;
+
+            int[][] valueGrid = MyCollectionExtensions.CreateJaggedArray<int[][]>(valueGridHeight, valueGridWidth);
+
+            for (int row = 0; row < patternOutputHeight; row++)
+            {
+                for (int col = 0; col < patternOutputWidth; col++)
+                {
+                    Pattern pattern = GetPatternDataFromIndex(outputValues[row][col]).Pattern;
+                    GetPatternValues(patternOutputWidth, patternOutputHeight, valueGrid, row, col, pattern);
+                }
+            }
+            return valueGrid;
+        }
+
+        private void GetPatternValues(int patternOutputWidth, int patternOutputHeight, int[][] valueGrid, int row, int col, Pattern pattern)
+        {
+            if(row == patternOutputHeight - 1 && col == patternOutputWidth - 1)
+            {
+                for (int row_2 = 0; row_2 < patternSize; row_2++)
+                {
+                    for (int col_2 = 0; col_2 < patternSize; col_2++)
+                    {
+                        valueGrid[row + row_2][col + col_2] = pattern.GetGridValue(col_2, row_2);
+                    }
+                }
+            }
+            else if (row == patternOutputHeight - 1)
+            {
+                for (int row_2 = 0; row_2 < patternSize; row_2++)
+                {
+                    valueGrid[row + row_2][col] = pattern.GetGridValue(0, row_2);
+                }
+            }
+            else if (col == patternOutputWidth - 1)
+            {
+                for (int col_2 = 0; col_2 < patternSize; col_2++)
+                {
+                    valueGrid[row][col + col_2] = pattern.GetGridValue(col_2, 0);
+                }
+            }
+            else
+            {
+                valueGrid[row][col] = pattern.GetGridValue(0, 0);
+            }
         }
     }
 }
