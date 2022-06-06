@@ -12,6 +12,14 @@ namespace WaveFunctionCollapse
         Right
     }
 
+    public enum TileValue
+    {
+        Road,
+        Sidewalk,
+        SidewalkEdge,
+        Walkway
+    }
+
     public static class DirectionHelper
     {
         public static Direction GetOppositeDirection(this Direction direction)
