@@ -8,9 +8,6 @@ public class Tile : MonoBehaviour
      
     private void Start()
     {
-        foreach (var socket in sockets)
-        {
-            Debug.Log("direction: " + socket.direction + ", value: " + socket.Value + ", value Neighbours: " + socket.validNeighbours[0]);
-        }
+
     }
 }

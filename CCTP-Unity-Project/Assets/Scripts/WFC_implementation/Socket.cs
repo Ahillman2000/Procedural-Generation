@@ -8,6 +8,6 @@ using System;
 public struct Socket
 {
     public Direction direction;
-    public int Value;
-    public List<int> validNeighbours;
+    public TileValue value;
+    public List<TileValue> validNeighbours;
 }

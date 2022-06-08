@@ -14,10 +14,9 @@ namespace WaveFunctionCollapse
 
     public enum TileValue
     {
-        Road,
-        Sidewalk,
-        SidewalkEdge,
-        Walkway
+        Grass,
+        PathVertical,
+        PathHorizontal,
     }
 
     public static class DirectionHelper
