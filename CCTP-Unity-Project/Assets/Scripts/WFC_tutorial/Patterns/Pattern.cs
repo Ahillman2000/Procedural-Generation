@@ -58,19 +58,19 @@ namespace WaveFunctionCollapse
             switch (_dir)
             {
                 case Direction.Up:
-                    gridPartToCompare = MyCollectionExtensions.CreateJaggedArray<int[][]>(grid.Length - 1, grid.Length);
+                    gridPartToCompare = HelperFunctions.CreateJaggedArray<int[][]>(grid.Length - 1, grid.Length);
                     CreatePartOfGrid(0, grid.Length, 1, grid.Length, gridPartToCompare);
                     break;
                 case Direction.Down:
-                    gridPartToCompare = MyCollectionExtensions.CreateJaggedArray<int[][]>(grid.Length - 1, grid.Length);
+                    gridPartToCompare = HelperFunctions.CreateJaggedArray<int[][]>(grid.Length - 1, grid.Length);
                     CreatePartOfGrid(0, grid.Length, 0, grid.Length - 1, gridPartToCompare);
                     break;
                 case Direction.Left:
-                    gridPartToCompare = MyCollectionExtensions.CreateJaggedArray<int[][]>(grid.Length, grid.Length - 1);
+                    gridPartToCompare = HelperFunctions.CreateJaggedArray<int[][]>(grid.Length, grid.Length - 1);
                     CreatePartOfGrid(0, grid.Length - 1, 0, grid.Length, gridPartToCompare);
                     break;
                 case Direction.Right:
-                    gridPartToCompare = MyCollectionExtensions.CreateJaggedArray<int[][]>(grid.Length, grid.Length - 1);
+                    gridPartToCompare = HelperFunctions.CreateJaggedArray<int[][]>(grid.Length, grid.Length - 1);
                     CreatePartOfGrid(1, grid.Length, 0, grid.Length, gridPartToCompare);
                     break;
                 default:

@@ -20,7 +20,7 @@ namespace WaveFunctionCollapse
 
         private void CreateGridOfIndices(IValue<T>[][] _gridOfValues)
         {
-            grid = MyCollectionExtensions.CreateJaggedArray<int[][]>(_gridOfValues.Length, _gridOfValues[0].Length);
+            grid = HelperFunctions.CreateJaggedArray<int[][]>(_gridOfValues.Length, _gridOfValues[0].Length);
             for (int row = 0; row < _gridOfValues.Length; row++)
             {
                 for (int col = 0; col < _gridOfValues[0].Length; col++)
@@ -114,7 +114,7 @@ namespace WaveFunctionCollapse
 
         public int[][] GetPatternValuesFromGridAt(int x, int y , int _patternSize)
         {
-            int[][] arrayToReturn = MyCollectionExtensions.CreateJaggedArray<int[][]>(_patternSize, _patternSize);
+            int[][] arrayToReturn = HelperFunctions.CreateJaggedArray<int[][]>(_patternSize, _patternSize);
             for (int row = 0; row < _patternSize; row++)
             {
                 for (int col = 0; col < _patternSize; col++)

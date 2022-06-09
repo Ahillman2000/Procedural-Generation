@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Helpers
 {
-    public static class MyCollectionExtensions
+    public static class HelperFunctions
     {
         public static T CreateJaggedArray<T>(params int[] lengths)
         {
@@ -42,6 +42,18 @@ namespace Helpers
         {
             if (x < 0 || x >= width || y < 0 || y >= height) return false;
             return true;
+        }
+
+        public static int ConvertTo1dArray(int x , int y, int gridWidth)
+        {
+            return (x * gridWidth) + y;
+        }
+
+        public static Vector2 ConvertTo2dArray(int i, int gridWidth)
+        {
+            Vector2 returnVector = new Vector2(i / gridWidth, i % gridWidth);
+
+            return returnVector;
         }
     }
 }

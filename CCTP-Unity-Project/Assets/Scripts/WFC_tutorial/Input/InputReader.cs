@@ -24,7 +24,7 @@ namespace WaveFunctionCollapse
             TileBaseValue[][] gridOfValues = null;
             if(grid != null)
             {
-                gridOfValues = MyCollectionExtensions.CreateJaggedArray<TileBaseValue[][]>(grid.Length, grid[0].Length);
+                gridOfValues = HelperFunctions.CreateJaggedArray<TileBaseValue[][]>(grid.Length, grid[0].Length);
 
                 for (int row = 0; row < grid.Length; row++)
                 {
@@ -46,7 +46,7 @@ namespace WaveFunctionCollapse
         private TileBase[][] CreateTileBaseGrid(InputImageParameters imageParameters)
         {
             TileBase[][] gridOfInputTiles = null;
-            gridOfInputTiles = MyCollectionExtensions.CreateJaggedArray<TileBase[][]>(imageParameters.Height, imageParameters.Width);
+            gridOfInputTiles = HelperFunctions.CreateJaggedArray<TileBase[][]>(imageParameters.Height, imageParameters.Width);
 
             for (int row = 0; row < imageParameters.Height; row++)
             {

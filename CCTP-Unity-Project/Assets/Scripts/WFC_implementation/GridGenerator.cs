@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WaveFunctionCollapse;
+using Helpers;
 
 public class GridGenerator : MonoBehaviour
 {
@@ -13,22 +14,22 @@ public class GridGenerator : MonoBehaviour
 
     [SerializeField] private float tileOffset = 5f;
 
-    [SerializeField] private GameObject[] tilePrefabs;
+    [SerializeField] private List<GameObject> tilePrefabs;
     public List<GameObject> tilesInSet = new List<GameObject>();
 
-    public Vector3[,] gridPositions;
-    public Vector3[,] possibleTilles;
-
     public GameObject spherePrefab;
+    public GameObject[] spherePrefabs;
+
+    public Dictionary<int, List<GameObject>> possibleTilesInCells = new Dictionary<int, List<GameObject>>();
 
     void Start()
     {
         
     }
 
-    private int GenerateRandomNumber()
+    private int GenerateRandomTile(List<GameObject> tiles)
     {
-        return UnityEngine.Random.Range(0, tilePrefabs.Length);
+        return UnityEngine.Random.Range(0, tiles.Count);
     }
 
     public void GenerateTiles()
@@ -38,82 +39,41 @@ public class GridGenerator : MonoBehaviour
             DestroyImmediate(GameObject.Find(mapName));
         }
         GameObject map = new GameObject(mapName);
+
         tilesInSet.Clear();
+        possibleTilesInCells.Clear();
+        spherePrefabs = new GameObject[gridWidth * gridHeight];
 
-        gridPositions = new Vector3[gridWidth, gridHeight];
-
-        /*for (int x = 0; x < gridWidth; x++)
+        for (int row = 0; row < gridWidth; row++)
         {
-            for (int z = 0; z < gridHeight; z++)
+            for (int col = 0; col < gridHeight; col++)
             {
-                int randonNumber = Random.Range(0, tilePrefabs.Length);
-                Vector3 tilePositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2);
-                Vector3 tilePosition = tilePositionOffset + new Vector3(x * tileOffset, 0, z * tileOffset) + new Vector3(tileOffset / 2, 0, tileOffset / 2);
-                GameObject tile = Instantiate(tilePrefabs[randonNumber], tilePosition, Quaternion.identity);
-                tile.transform.parent = map.transform;
-                tilesInSet.Add(tile);
+                int i = HelperFunctions.ConvertTo1dArray(row, col, gridWidth);
 
-                gridPositions[x, z] = tilePosition;
-            }
-        }*/
-        for (int x = 0; x < gridWidth; x++)
-        {
-            for (int z = 0; z < gridHeight; z++)
-            { 
-                Vector3 tilePositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2);
-                Vector3 tilePosition = tilePositionOffset + new Vector3(x * tileOffset, 0, z * tileOffset) + new Vector3(tileOffset / 2, 0, tileOffset / 2);
-                gridPositions[x, z] = tilePosition;
-
-                GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
-                debugSphere.transform.parent = map.transform;
+                Vector3 cellPositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2) + new Vector3(tileOffset/2, 0, tileOffset/2);
+                Vector3 cellPosition = new Vector3(row * tileOffset, 0, col * tileOffset);
+                spherePrefabs[i] = Instantiate(spherePrefab, cellPositionOffset + cellPosition, Quaternion.identity);
+                spherePrefabs[i].transform.parent = map.transform;
+                possibleTilesInCells.Add(i, tilePrefabs);
             }
         }
 
-        GameObject CenterTile = Instantiate(tilePrefabs[GenerateRandomNumber()], gridPositions[gridWidth / 2, gridHeight / 2], Quaternion.identity);
-        CenterTile.transform.parent = map.transform;
-
-        foreach(Direction direction in Enum.GetValues(typeof(Direction)))
+        for (int i = 0; i < spherePrefabs.Length; i++)
         {
-            Vector3 directionOffset = Vector3.zero;
+            List<GameObject> valuesInKey = possibleTilesInCells[i];
+            //Debug.Log("values in tile 0: " + valuesInKey);
 
-            switch (direction)
+            int numberOfValuesInKey = valuesInKey.Count;
+            //Debug.Log("number of values in tile 0: " + numberOfValuesInKey);
+
+            for (int j = 0; j < numberOfValuesInKey; j++)
             {
-                case Direction.Up:
-                    directionOffset = new Vector3(0,0,1);
-                    break;
-                case Direction.Down:
-                    directionOffset = new Vector3(0, 0, -1);
-                    break;
-                case Direction.Left:
-                    directionOffset = new Vector3(-1, 0, 0);
-                    break;
-                case Direction.Right:
-                    directionOffset = new Vector3(1, 0, 0);
-                    break;
-                default:
-                    break;
-            }
-
-            GameObject gen1Tile = Instantiate(tilePrefabs[GenerateRandomNumber()], CenterTile.transform.position + directionOffset * tileOffset, Quaternion.identity);
-            gen1Tile.transform.parent = map.transform;
-
-            while (CenterTile.GetComponent<Tile>().sockets[(int)direction].value != gen1Tile.GetComponent<Tile>().sockets[(int)DirectionHelper.GetOppositeDirection(direction)].value)
-            {
-                DestroyImmediate(gen1Tile);
-                gen1Tile = Instantiate(tilePrefabs[GenerateRandomNumber()], CenterTile.transform.position + directionOffset * tileOffset, Quaternion.identity);
-                gen1Tile.transform.parent = map.transform;
+                GameObject tile = valuesInKey[j];
+                GameObject tileInstance = Instantiate(tile);
+                tileInstance.transform.parent = spherePrefabs[i].transform;
+                tileInstance.transform.localPosition = Vector3.zero;
             }
         }
-
-        /*
-        int i = 0;
-        Direction dir = Direction.Up;
-
-        Debug.Log(GetNeinbourInDirection(i, dir).name);
-        Debug.Log(gridPositions[0, 0]);
-        Debug.Log(GetNeinbourInDirection(i, dir).sockets[(int)DirectionHelper.GetOppositeDirection(dir)].value);
-        Debug.Log(IsNeighbourValidInDirection(i, dir));
-        */
     }
 
     public bool IsNeighbourValidInDirection(int tileIndex, Direction direction)

@@ -40,7 +40,7 @@ namespace WaveFunctionCollapse
                 colMax = (int)sizeOfGrid.x;
             }
 
-            int[][] patternIndicesGrid = MyCollectionExtensions.CreateJaggedArray<int[][]>(patternGridSizeY, patternGridSizeX);
+            int[][] patternIndicesGrid = HelperFunctions.CreateJaggedArray<int[][]>(patternGridSizeY, patternGridSizeX);
 
             int totalFrequency = 0;
             int patternIndex   = 0;

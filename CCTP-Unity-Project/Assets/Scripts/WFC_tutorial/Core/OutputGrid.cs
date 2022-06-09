@@ -114,7 +114,7 @@ namespace WaveFunctionCollapse
 
         internal bool IsPositionValid(Vector2Int position)
         {
-            return MyCollectionExtensions.ValidateCoords(position.x, position.y, Width, Height);
+            return HelperFunctions.ValidateCoords(position.x, position.y, Width, Height);
         }
 
         public Vector2Int GetRandomCell()
@@ -131,10 +131,10 @@ namespace WaveFunctionCollapse
 
         public int[][] GetSolvedOutputGrid()
         {
-            int[][] returnGrid = MyCollectionExtensions.CreateJaggedArray<int[][]>(Height, Width);
+            int[][] returnGrid = HelperFunctions.CreateJaggedArray<int[][]>(Height, Width);
             if(!IsGridSolved())
             {
-                return MyCollectionExtensions.CreateJaggedArray<int[][]>(0, 0);
+                return HelperFunctions.CreateJaggedArray<int[][]>(0, 0);
             }
             for (int row = 0; row < Height; row++)
             {
