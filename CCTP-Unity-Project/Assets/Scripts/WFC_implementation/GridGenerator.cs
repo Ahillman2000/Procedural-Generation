@@ -50,9 +50,9 @@ public class GridGenerator : MonoBehaviour
             {
                 int i = HelperFunctions.ConvertTo1dArray(row, col, gridWidth);
 
-                Vector3 cellPositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2) + new Vector3(tileOffset/2, 0, tileOffset/2);
                 Vector3 cellPosition = new Vector3(row * tileOffset, 0, col * tileOffset);
-                spherePrefabs[i] = Instantiate(spherePrefab, cellPositionOffset + cellPosition, Quaternion.identity);
+                Vector3 cellPositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2) + new Vector3(tileOffset/2, 0, tileOffset/2);
+                spherePrefabs[i] = Instantiate(spherePrefab, cellPosition + cellPositionOffset, Quaternion.identity);
                 spherePrefabs[i].transform.parent = map.transform;
                 possibleTilesInCells.Add(i, tilePrefabs);
             }
@@ -71,7 +71,15 @@ public class GridGenerator : MonoBehaviour
                 GameObject tile = valuesInKey[j];
                 GameObject tileInstance = Instantiate(tile);
                 tileInstance.transform.parent = spherePrefabs[i].transform;
-                tileInstance.transform.localPosition = Vector3.zero;
+
+                int gridWidth = (int)Mathf.Sqrt(numberOfValuesInKey);
+
+                tileInstance.transform.localScale /= gridWidth;
+
+                Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(j, gridWidth).x * tileOffset * tileInstance.transform.localScale.x, 0, HelperFunctions.ConvertTo2dArray(j, gridWidth).y * tileOffset * tileInstance.transform.localScale.z);
+                Vector3 cellPositionOffset = new Vector3(-tileOffset / 2 * tileInstance.transform.localScale.x, 0, -tileOffset / 2 * tileInstance.transform.localScale.z);
+
+                tileInstance.transform.localPosition = cellPosition + cellPositionOffset;
             }
         }
     }
