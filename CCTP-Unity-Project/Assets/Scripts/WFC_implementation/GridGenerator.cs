@@ -9,12 +9,12 @@ public class GridGenerator : MonoBehaviour
 {
     [SerializeField] string mapName = "===== MAP =====";
 
-    [Range(0, 10)] [SerializeField] private int gridWidth;
-    [Range(0, 10)] [SerializeField] private int gridHeight;
+    [Range(0, 10)] public int gridWidth;
+    [Range(0, 10)] public int gridHeight;
 
     [SerializeField] private float tileOffset = 5f;
 
-    [SerializeField] private List<GameObject> tilePrefabs;
+    [SerializeField] public List<GameObject> tilePrefabs;
     [SerializeField] GameObject spherePrefab;
 
     public List<Cell> grid = new List<Cell>();
@@ -24,16 +24,29 @@ public class GridGenerator : MonoBehaviour
         
     }
 
-    private GameObject SelectRandomTile(List<GameObject> tiles)
+    /// <summary>
+    /// Selects a random tile from a give list of objects
+    /// </summary>
+    /// <param name="tiles"> The list of objects to iterate through </param>
+    /// <returns> The randomly selected tile </returns>
+    public GameObject SelectRandomTile(List<GameObject> tiles)
     {
         return tiles[UnityEngine.Random.Range(0, tiles.Count)];
     }
 
-    private Cell SelectRandomCell(List<Cell> grid)
+    /// <summary>
+    /// Selects a random Cell from a give list of cells
+    /// </summary>
+    /// <param name="cells"> The list of cells to iterate through </param>
+    /// <returns> The randomly selected cell </returns>
+    public Cell SelectRandomCell(List<Cell> cells)
     {
-        return grid[UnityEngine.Random.Range(0, grid.Count)];
+        return cells[UnityEngine.Random.Range(0, cells.Count)];
     }
 
+    /// <summary>
+    /// WFC function
+    /// </summary>
     public void GenerateTiles()
     {
         GameObject map = GenerateNewMap();
@@ -42,32 +55,14 @@ public class GridGenerator : MonoBehaviour
 
         GenerateNewGrid(map);
 
-        // Collapse cells
-        //foreach (Cell cell in grid)
-        //{
-        //    // remove all tiles in order but 1
-        //    /*for (int i = 0; i < 3; i++)
-        //    {
-        //        cell.RemovePossibleTile(tilePrefabs[i]);
-        //    }*/
+        // TODO: Exract out of this script from here ...
 
-        //    // collapse cell to single random tile
-        //    while (!cell.Collapsed)
-        //    {
-        //        cell.RemovePossibleTile(GenerateRandomTile(tilePrefabs));
-        //    }
-        //}
 
-        grid[HelperFunctions.ConvertTo1dArray(6, 7, gridWidth)].RemovePossibleTile(SelectRandomTile(tilePrefabs));
 
-        Cell cellToCollapse = GetCellWithLowestEntropy();
-        Debug.Log("Collapsing cell: " + HelperFunctions.ConvertTo2dArray(cellToCollapse.cellIndex, gridWidth));
-        while(!cellToCollapse.Collapsed)
-        {
-            cellToCollapse.RemovePossibleTile(SelectRandomTile(tilePrefabs));
-        }
+        // ... To here
     }
 
+    // TODO: should be made public and return grid
     private void GenerateNewGrid(GameObject map)
     {
         GameObject debugSpheres = new GameObject("debugSpheres");
@@ -100,6 +95,7 @@ public class GridGenerator : MonoBehaviour
         return map;
     }
 
+    // TODO: Exract out of this script from here ...
     public Cell GetNeinbourInDirection(int index, Direction dir)
     {
         switch (dir)
@@ -128,38 +124,58 @@ public class GridGenerator : MonoBehaviour
     /// </returns>
     public Cell GetCellWithLowestEntropy()
     {
-        Cell lowestEntropyCell = grid[0];
+        Cell lowestEntropyCell = null;
 
+        // sets LEC to first uncollapsed cell
+        foreach (Cell cell in grid)
+        { 
+            if (!cell.Collapsed)
+            {
+                lowestEntropyCell = cell;
+                break;
+            }
+        }
+
+        // loops through grid to find and set LEC
         foreach (Cell cell in grid)
         {
             if(cell.GetEntropy() < lowestEntropyCell.GetEntropy() && !cell.Collapsed)
             {
+                // set LEC to the current cell
                 lowestEntropyCell = cell;
             }
         }
 
-        if(lowestEntropyCell == grid[0])
+        // check that the LEC is the only one with this entropy value
+        List<Cell> lowestEntropyCells = new List<Cell>();
+        foreach (Cell cell in grid)
         {
-            List<Cell> lowestEntropyCells = new List<Cell>();
-
-            foreach (Cell cell in grid)
+            // if other cells with the lowest entropy are found
+            if (cell.GetEntropy() == lowestEntropyCell.GetEntropy())
             {
-                if (cell.GetEntropy() == grid[0].GetEntropy())
-                {
-                    lowestEntropyCells.Add(cell);
-                }
-            }
-
-            if(lowestEntropyCells.Count > 1)
-            {
-                Debug.Log("No lowest entropy cell found, returning random cell");
-                return SelectRandomCell(grid);
+                // add to list of LECs
+                lowestEntropyCells.Add(cell);
             }
         }
-        Debug.Log("Returning cell with loweset entropy");
-        return lowestEntropyCell;
-    }
 
+        // if there are more than 1 LECs
+        if (lowestEntropyCells.Count > 1)
+        {
+            Debug.Log("No lowest entropy cell found, returning random cell");
+
+            Cell randomCell = SelectRandomCell(lowestEntropyCells);
+            // return random cell from list of LECs
+            return randomCell;
+        }
+        // if there is only 1 LEC
+        else
+        {
+            // return it
+            Debug.Log("Lowest entropy cell found");
+            return lowestEntropyCells[0];
+        }
+    }
+  
     void Update()
     {
         
