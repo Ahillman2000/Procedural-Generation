@@ -50,21 +50,18 @@ public class GridGenerator : MonoBehaviour
     public void GenerateTiles()
     {
         GameObject map = GenerateNewMap();
-
-        grid.Clear();
-
         GenerateNewGrid(map);
-
-        // TODO: Exract out of this script from here ...
-
-
-
-        // ... To here
     }
 
     // TODO: should be made public and return grid
+    /// <summary>
+    /// Creates cells for the new grid
+    /// </summary>
+    /// <param name="map"> The object that the cells will be parented to </param>
     private void GenerateNewGrid(GameObject map)
     {
+        grid.Clear();
+
         GameObject debugSpheres = new GameObject("debugSpheres");
         debugSpheres.transform.parent = map.transform;
 
@@ -85,6 +82,10 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates an object to store everything in the hierarchy
+    /// </summary>
+    /// <returns> A new blank gameObject</returns>
     private GameObject GenerateNewMap()
     {
         if (GameObject.Find(mapName))
@@ -93,25 +94,6 @@ public class GridGenerator : MonoBehaviour
         }
         GameObject map = new GameObject(mapName);
         return map;
-    }
-
-    // TODO: Exract out of this script from here ...
-    public Cell GetNeinbourInDirection(int index, Direction dir)
-    {
-        switch (dir)
-        {
-            case Direction.Up:
-                return grid[index + 1];
-            case Direction.Down:
-                return grid[index - 1];
-            case Direction.Left:
-                return grid[index - gridHeight];
-            case Direction.Right:
-                return grid[index + gridHeight];
-            default:
-                Debug.LogWarning("No tile in given direction");
-                return null;
-        }
     }
 
     /// <summary>

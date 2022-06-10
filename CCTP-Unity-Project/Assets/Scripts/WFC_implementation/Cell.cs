@@ -2,18 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WaveFunctionCollapse;
 
 [Serializable]
 public class Cell
 {
-    public int cellIndex { get; set; } = 0;
+    public int CellIndex { get; set; } = 0;
     [SerializeField] private Vector3 position = Vector3.zero;
-    [SerializeField] private List<GameObject> possibleTiles;
+    [SerializeField] public List<GameObject> possibleTiles;
 
     public bool Collapsed { get; set; } = false;
 
     [SerializeField] private GameObject tile;
-    GameObject parentObj;
+    readonly GameObject parentObj;
 
     /// <summary>
     /// Creates a new cell with the following params
@@ -24,7 +25,7 @@ public class Cell
     /// <param name="possibleTiles"> The possible tiles that this cell could be </param>
     public Cell(GameObject parentObj, int cellIndex, Vector3 position, List<GameObject> possibleTiles)
     {
-        this.cellIndex = cellIndex;
+        this.CellIndex = cellIndex;
         this.position = position;
         this.possibleTiles = new List<GameObject>(possibleTiles);
         this.parentObj = parentObj;
