@@ -49,9 +49,9 @@ namespace Helpers
             return (x * gridWidth) + y;
         }
 
-        public static Vector2 ConvertTo2dArray(int i, int gridWidth)
+        public static Vector2Int ConvertTo2dArray(int i, int gridWidth)
         {
-            Vector2 returnVector = new Vector2(i / gridWidth, i % gridWidth);
+            Vector2Int returnVector = new Vector2Int(i / gridWidth, i % gridWidth);
 
             return returnVector;
         }

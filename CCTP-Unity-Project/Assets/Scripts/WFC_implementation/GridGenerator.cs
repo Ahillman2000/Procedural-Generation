@@ -15,34 +15,63 @@ public class GridGenerator : MonoBehaviour
     [SerializeField] private float tileOffset = 5f;
 
     [SerializeField] private List<GameObject> tilePrefabs;
-    public List<GameObject> tilesInSet = new List<GameObject>();
+    [SerializeField] GameObject spherePrefab;
 
-    public GameObject spherePrefab;
-    public GameObject[] spherePrefabs;
-
-    public Dictionary<int, List<GameObject>> possibleTilesInCells = new Dictionary<int, List<GameObject>>();
+    public List<Cell> grid = new List<Cell>();
 
     void Start()
     {
         
     }
 
-    private int GenerateRandomTile(List<GameObject> tiles)
+    private GameObject SelectRandomTile(List<GameObject> tiles)
     {
-        return UnityEngine.Random.Range(0, tiles.Count);
+        return tiles[UnityEngine.Random.Range(0, tiles.Count)];
+    }
+
+    private Cell SelectRandomCell(List<Cell> grid)
+    {
+        return grid[UnityEngine.Random.Range(0, grid.Count)];
     }
 
     public void GenerateTiles()
     {
-        if(GameObject.Find(mapName))
-        {
-            DestroyImmediate(GameObject.Find(mapName));
-        }
-        GameObject map = new GameObject(mapName);
+        GameObject map = GenerateNewMap();
 
-        tilesInSet.Clear();
-        possibleTilesInCells.Clear();
-        spherePrefabs = new GameObject[gridWidth * gridHeight];
+        grid.Clear();
+
+        GenerateNewGrid(map);
+
+        // Collapse cells
+        //foreach (Cell cell in grid)
+        //{
+        //    // remove all tiles in order but 1
+        //    /*for (int i = 0; i < 3; i++)
+        //    {
+        //        cell.RemovePossibleTile(tilePrefabs[i]);
+        //    }*/
+
+        //    // collapse cell to single random tile
+        //    while (!cell.Collapsed)
+        //    {
+        //        cell.RemovePossibleTile(GenerateRandomTile(tilePrefabs));
+        //    }
+        //}
+
+        grid[HelperFunctions.ConvertTo1dArray(6, 7, gridWidth)].RemovePossibleTile(SelectRandomTile(tilePrefabs));
+
+        Cell cellToCollapse = GetCellWithLowestEntropy();
+        Debug.Log("Collapsing cell: " + HelperFunctions.ConvertTo2dArray(cellToCollapse.cellIndex, gridWidth));
+        while(!cellToCollapse.Collapsed)
+        {
+            cellToCollapse.RemovePossibleTile(SelectRandomTile(tilePrefabs));
+        }
+    }
+
+    private void GenerateNewGrid(GameObject map)
+    {
+        GameObject debugSpheres = new GameObject("debugSpheres");
+        debugSpheres.transform.parent = map.transform;
 
         for (int row = 0; row < gridWidth; row++)
         {
@@ -50,61 +79,85 @@ public class GridGenerator : MonoBehaviour
             {
                 int i = HelperFunctions.ConvertTo1dArray(row, col, gridWidth);
 
-                Vector3 cellPosition = new Vector3(row * tileOffset, 0, col * tileOffset);
-                Vector3 cellPositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2) + new Vector3(tileOffset/2, 0, tileOffset/2);
-                spherePrefabs[i] = Instantiate(spherePrefab, cellPosition + cellPositionOffset, Quaternion.identity);
-                spherePrefabs[i].transform.parent = map.transform;
-                possibleTilesInCells.Add(i, tilePrefabs);
-            }
-        }
+                Vector3 tilePositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2);
+                Vector3 tilePosition = tilePositionOffset + new Vector3(row * tileOffset, 0, col * tileOffset) + new Vector3(tileOffset / 2, 0, tileOffset / 2);
 
-        for (int i = 0; i < spherePrefabs.Length; i++)
-        {
-            List<GameObject> valuesInKey = possibleTilesInCells[i];
-            //Debug.Log("values in tile 0: " + valuesInKey);
-
-            int numberOfValuesInKey = valuesInKey.Count;
-            //Debug.Log("number of values in tile 0: " + numberOfValuesInKey);
-
-            for (int j = 0; j < numberOfValuesInKey; j++)
-            {
-                GameObject tile = valuesInKey[j];
-                GameObject tileInstance = Instantiate(tile);
-                tileInstance.transform.parent = spherePrefabs[i].transform;
-
-                int gridWidth = (int)Mathf.Sqrt(numberOfValuesInKey);
-
-                tileInstance.transform.localScale /= gridWidth;
-
-                Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(j, gridWidth).x * tileOffset * tileInstance.transform.localScale.x, 0, HelperFunctions.ConvertTo2dArray(j, gridWidth).y * tileOffset * tileInstance.transform.localScale.z);
-                Vector3 cellPositionOffset = new Vector3(-tileOffset / 2 * tileInstance.transform.localScale.x, 0, -tileOffset / 2 * tileInstance.transform.localScale.z);
-
-                tileInstance.transform.localPosition = cellPosition + cellPositionOffset;
+                Cell cell = new Cell(map, i, tilePosition, tilePrefabs);
+                GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
+                debugSphere.transform.parent = debugSpheres.transform;
+                grid.Add(cell);
             }
         }
     }
 
-    public bool IsNeighbourValidInDirection(int tileIndex, Direction direction)
+    private GameObject GenerateNewMap()
     {
-        return tilesInSet[tileIndex].GetComponent<Tile>().sockets[(int)direction].value == GetNeinbourInDirection(tileIndex, direction).sockets[(int)DirectionHelper.GetOppositeDirection(direction)].value;
+        if (GameObject.Find(mapName))
+        {
+            DestroyImmediate(GameObject.Find(mapName));
+        }
+        GameObject map = new GameObject(mapName);
+        return map;
     }
 
-    public Tile GetNeinbourInDirection(int index, Direction dir)
+    public Cell GetNeinbourInDirection(int index, Direction dir)
     {
         switch (dir)
         {
             case Direction.Up:
-                return tilesInSet[index + 1].GetComponent<Tile>();
+                return grid[index + 1];
             case Direction.Down:
-                return tilesInSet[index - 1].GetComponent<Tile>();
+                return grid[index - 1];
             case Direction.Left:
-                return tilesInSet[index - gridHeight].GetComponent<Tile>();
+                return grid[index - gridHeight];
             case Direction.Right:
-                return tilesInSet[index + gridHeight].GetComponent<Tile>();
+                return grid[index + gridHeight];
             default:
                 Debug.LogWarning("No tile in given direction");
                 return null;
         }
+    }
+
+    /// <summary>
+    /// Returns tile with lowest entropy if one exists or a random cell otherwise
+    /// </summary>
+    /// <returns> 
+    /// Lowest entropy cell IF one cell has the fewest possible tiles
+    ///   OR
+    /// Random Cell IF no cell has fewest possible tiles
+    /// </returns>
+    public Cell GetCellWithLowestEntropy()
+    {
+        Cell lowestEntropyCell = grid[0];
+
+        foreach (Cell cell in grid)
+        {
+            if(cell.GetEntropy() < lowestEntropyCell.GetEntropy() && !cell.Collapsed)
+            {
+                lowestEntropyCell = cell;
+            }
+        }
+
+        if(lowestEntropyCell == grid[0])
+        {
+            List<Cell> lowestEntropyCells = new List<Cell>();
+
+            foreach (Cell cell in grid)
+            {
+                if (cell.GetEntropy() == grid[0].GetEntropy())
+                {
+                    lowestEntropyCells.Add(cell);
+                }
+            }
+
+            if(lowestEntropyCells.Count > 1)
+            {
+                Debug.Log("No lowest entropy cell found, returning random cell");
+                return SelectRandomCell(grid);
+            }
+        }
+        Debug.Log("Returning cell with loweset entropy");
+        return lowestEntropyCell;
     }
 
     void Update()
