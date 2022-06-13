@@ -80,6 +80,8 @@ public class GridGenerator : MonoBehaviour
                 grid.Add(cell);
             }
         }
+
+
     }
 
     /// <summary>
@@ -108,7 +110,7 @@ public class GridGenerator : MonoBehaviour
     {
         Cell lowestEntropyCell = null;
 
-        // sets LEC to first uncollapsed cell
+        // sets the lowestEntropyCell (LEC) to first uncollapsed cell
         foreach (Cell cell in grid)
         { 
             if (!cell.Collapsed)
@@ -123,36 +125,34 @@ public class GridGenerator : MonoBehaviour
         {
             if(cell.GetEntropy() < lowestEntropyCell.GetEntropy() && !cell.Collapsed)
             {
-                // set LEC to the current cell
                 lowestEntropyCell = cell;
             }
         }
 
-        // check that the LEC is the only one with this entropy value
+        /* 
+         check that the LEC is the only one with this entropy value,
+         if other cells with the lowest entropy are found then add them to a list
+        */
         List<Cell> lowestEntropyCells = new List<Cell>();
         foreach (Cell cell in grid)
         {
-            // if other cells with the lowest entropy are found
             if (cell.GetEntropy() == lowestEntropyCell.GetEntropy())
             {
-                // add to list of LECs
                 lowestEntropyCells.Add(cell);
             }
         }
 
-        // if there are more than 1 LECs
+        // if there are more than 1 LECs then return a random cell from list of LECs, otherwise return the LEC
         if (lowestEntropyCells.Count > 1)
         {
             Debug.Log("No lowest entropy cell found, returning random cell");
 
             Cell randomCell = SelectRandomCell(lowestEntropyCells);
-            // return random cell from list of LECs
+
             return randomCell;
         }
-        // if there is only 1 LEC
         else
         {
-            // return it
             Debug.Log("Lowest entropy cell found");
             return lowestEntropyCells[0];
         }

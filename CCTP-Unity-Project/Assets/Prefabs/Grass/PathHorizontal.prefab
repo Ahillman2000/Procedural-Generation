@@ -56,7 +56,7 @@ MonoBehaviour:
     validNeighbours: 02000000
   - direction: 3
     value: 2
-    validNeighbours: 
+    validNeighbours: 02000000
 --- !u!1001 &6928964265718288248
 PrefabInstance:
   m_ObjectHideFlags: 0

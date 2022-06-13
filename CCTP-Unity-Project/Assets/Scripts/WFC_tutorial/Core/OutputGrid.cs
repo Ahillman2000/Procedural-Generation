@@ -114,7 +114,7 @@ namespace WaveFunctionCollapse
 
         internal bool IsPositionValid(Vector2Int position)
         {
-            return HelperFunctions.ValidateCoords(position.x, position.y, Width, Height);
+            return HelperFunctions.Validate2DCoords(position.x, position.y, Width, Height);
         }
 
         public Vector2Int GetRandomCell()

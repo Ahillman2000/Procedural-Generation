@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using WaveFunctionCollapse;
 
 namespace Helpers
 {
@@ -35,13 +36,47 @@ namespace Helpers
             {
                 return false;
             }
-            return ValidateCoords(x, y, array[0].Length, array.Length);
+            return Validate2DCoords(x, y, array[0].Length, array.Length);
         }
 
-        public static bool ValidateCoords(int x, int y, int width, int height)
+        public static bool Validate2DCoords(int x, int y, int width, int height)
         {
             if (x < 0 || x >= width || y < 0 || y >= height) return false;
             return true;
+        }
+
+        public static bool Validate1DCoords(int i, int height, int width)
+        {
+            throw new NotImplementedException();
+
+            //up
+            //i + 1 <= (x + 1) * height - 1;
+            //down
+            //i - 1 >= x * height; 
+            //left
+            //i - height >= 0;
+            //right
+            //i + height < lengthOFGrid;
+        }
+
+        public static bool CheckForValidNeighbourInDirection(int i, int gridHeight, int gridWidth, Direction direction)
+        {
+            int x = HelperFunctions.ConvertTo2dArray(i, gridWidth).x;
+            int gridSize = gridHeight * gridWidth;
+
+            switch (direction)
+            {
+                case Direction.Up:
+                    return i + 1 <= (x + 1) * gridHeight - 1;
+                case Direction.Down:
+                    return i - 1 >= x * gridHeight;
+                case Direction.Left:
+                    return i - gridHeight >= 0;
+                case Direction.Right:
+                    return i + gridHeight < gridSize;
+                default:
+                    return false;
+            }
         }
 
         public static int ConvertTo1dArray(int x , int y, int gridWidth)
