@@ -45,6 +45,7 @@ namespace Helpers
             return true;
         }
 
+        [Obsolete("Not Implmented Function. Use HelperFunctions.CheckForValidNeighbourInDirection instead")]
         public static bool Validate1DCoords(int i, int height, int width)
         {
             throw new NotImplementedException();
@@ -59,6 +60,14 @@ namespace Helpers
             //i + height < lengthOFGrid;
         }
 
+        /// <summary>
+        /// Check if a neighbour is valid in a given direction
+        /// </summary>
+        /// <param name="i"> The index of the cell being checked from  </param>
+        /// <param name="gridHeight"> The height of the given grid to act as a offset</param>
+        /// <param name="gridWidth"> The width of the given grid to determine the x index </param>
+        /// <param name="direction"> The direction in which to check the neighbouring cell </param>
+        /// <returns></returns>
         public static bool CheckForValidNeighbourInDirection(int i, int gridHeight, int gridWidth, Direction direction)
         {
             int x = HelperFunctions.ConvertTo2dArray(i, gridWidth).x;
@@ -79,11 +88,24 @@ namespace Helpers
             }
         }
 
+        /// <summary>
+        /// Converts a 2 dimensional array to 1 dimensional space
+        /// </summary>
+        /// <param name="x"> The x coordinate in 2 dimensional space </param>
+        /// <param name="y"> The y coordinate in 2 dimensional space </param>
+        /// <param name="gridWidth"> The width of the given grid </param>
+        /// <returns></returns>
         public static int ConvertTo1dArray(int x , int y, int gridWidth)
         {
             return (x * gridWidth) + y;
         }
 
+        /// <summary>
+        /// Converts a 1 dimensional array into 2 dimension space
+        /// </summary>
+        /// <param name="i"> The 1d index position </param>
+        /// <param name="gridWidth"> The width of the given grid </param>
+        /// <returns></returns>
         public static Vector2Int ConvertTo2dArray(int i, int gridWidth)
         {
             Vector2Int returnVector = new Vector2Int(i / gridWidth, i % gridWidth);

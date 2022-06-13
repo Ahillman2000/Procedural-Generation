@@ -9,8 +9,8 @@ public class GridGenerator : MonoBehaviour
 {
     [SerializeField] string mapName = "===== MAP =====";
 
-    [Range(0, 10)] public int gridWidth;
-    [Range(0, 10)] public int gridHeight;
+    [Range(1, 10)] public int gridWidth;
+    [Range(1, 10)] public int gridHeight;
 
     [SerializeField] private float tileOffset = 5f;
 
@@ -21,7 +21,7 @@ public class GridGenerator : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     /// <summary>

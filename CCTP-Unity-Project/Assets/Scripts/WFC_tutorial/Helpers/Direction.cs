@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace WaveFunctionCollapse
 {
+    /// <summary>
+    /// Cardinal direction and the associated values 
+    /// </summary>
     public enum Direction
     {
         Up,
@@ -12,6 +15,9 @@ namespace WaveFunctionCollapse
         Right
     }
 
+    /// <summary>
+    /// Possible edge tile values for sockets
+    /// </summary>
     public enum TileValue
     {
         Grass,
@@ -19,6 +25,9 @@ namespace WaveFunctionCollapse
         PathHorizontal,
     }
 
+    /// <summary>
+    /// Function to get the inverse of a given direction
+    /// </summary>
     public static class DirectionHelper
     {
         public static Direction GetOppositeDirection(this Direction direction)

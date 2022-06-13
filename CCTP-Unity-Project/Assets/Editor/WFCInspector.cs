@@ -31,7 +31,7 @@ public class WFCInspector : Editor
         WFC WFC = (WFC)target;
         if (GUILayout.Button("Collapse Cells"))
         {
-            WFC.CollpaseCells();
+            WFC.CollpaseCell();
         }
     }
 }

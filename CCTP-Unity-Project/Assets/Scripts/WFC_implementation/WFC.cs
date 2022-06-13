@@ -16,6 +16,9 @@ public class WFC : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// A container to store a neighbouring cell and the direction from the collapsing cell towards it
+    /// </summary>
     struct ValidNeighbour
     {
         public Cell cell;
@@ -27,25 +30,23 @@ public class WFC : MonoBehaviour
     /// gets the neighbour in direction, iterates through neighbours possible tileset, gets the socket in the opposite direction
     /// if the valid neighbour of that socket isnt the value of this socket then remove the possible tile from the set
     /// </summary>
-    public void CollpaseCells()
+    public void CollpaseCell()
     {
-        // select cell with lowest entropy or at random
+        // collapse primary cell
         Cell cellToCollapse = gridGenerator.GetCellWithLowestEntropy();
 
-        // collpase chosen cell
         Debug.Log("Collapsing cell: " + HelperFunctions.ConvertTo2dArray(cellToCollapse.CellIndex, gridGenerator.gridWidth));
         while (!cellToCollapse.Collapsed)
         {
             cellToCollapse.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
         }
 
-        // create a list of valid nieghbours
+        // get cells in valid directions
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
         foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
             if (HelperFunctions.CheckForValidNeighbourInDirection(cellToCollapse.CellIndex, gridGenerator.gridHeight, gridGenerator.gridWidth, direction))
             {
-                Debug.Log(direction + " is valid");
                 ValidNeighbour validNeighbour = new ValidNeighbour
                 {
                     cell = gridGenerator.grid[GetNeinbourInDirection(cellToCollapse.CellIndex, direction, gridGenerator.gridHeight)],
@@ -53,31 +54,21 @@ public class WFC : MonoBehaviour
                 };
                 validNeighbours.Add(validNeighbour);
             }
-            else
-            {
-                //Debug.Log(direction + " is NOT valid");
-            }
+            /*else Debug.Log(direction + " is NOT valid");*/
         }
 
-        // loop through each valid neighbour
-        Debug.Log("Valid neighbours at:");
+        // see if the potential neighbours have an invalid socket that does not fit with this tiles socket
         foreach (ValidNeighbour validNeighbour in validNeighbours)
         {
-            Debug.Log("- " + HelperFunctions.ConvertTo2dArray(validNeighbour.cell.CellIndex, gridGenerator.gridWidth));
-            // get the tile's socket in the direction of the valid neighbour
             Socket currentSocket = cellToCollapse.GetTile().GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
             
-            // list of tiles to removed from the conecting socket
             List<GameObject> invalidTiles = new List<GameObject>();
 
-            // loop through each tile in the connecting sockets possible tileset
             foreach (GameObject possibleTile in validNeighbour.cell.possibleTiles)
             {
                 Socket oppositeSocket = possibleTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection.GetOppositeDirection()];
-                Debug.Log(possibleTile.name + ": " + oppositeSocket.direction + " , " + oppositeSocket.value + " , " + oppositeSocket.validNeighbours[0]);
                 foreach (var validNeighbourTile in oppositeSocket.validNeighbours)
                 {
-                    // if tile is not valid add to list to remove
                     if (validNeighbourTile != currentSocket.value)
                     {
                         invalidTiles.Add(possibleTile);
@@ -85,51 +76,12 @@ public class WFC : MonoBehaviour
                 }
             }
 
+            // eliminate invalid tiles from the neighbours possible tileset
             foreach (GameObject invalidTile in invalidTiles)
             {
-                validNeighbour/*s[(int)validNeighbour.conectionDirection]*/.cell.RemovePossibleTile(invalidTile);
-                //Debug.Log(invalidTile.name + " being removed from cell" + HelperFunctions.ConvertTo2dArray(validNeighbour.cell.CellIndex, gridGenerator.gridWidth));
+                validNeighbour.cell.RemovePossibleTile(invalidTile);
             }
         }
-
-        //// collapse central tile
-        ////Cell cellToCollapse = gridGenerator.grid[HelperFunctions.ConvertTo1dArray(4, 4, gridGenerator.gridWidth)];
-
-        //// collapse cell to a single valid tile
-        //while (!cellToCollapse.Collapsed)
-        //{
-        //    cellToCollapse.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
-        //}
-
-        //Cell[] neighbours = new Cell[Enum.GetValues(typeof(Direction)).Length];
-        //foreach (Direction direction in Enum.GetValues(typeof(Direction)))
-        //{
-        //    Socket thisSocket = cellToCollapse.GetTile().GetComponent<Tile>().sockets[(int)direction];
-        //    // get neighbours in each direction
-        //    neighbours[(int)direction] = gridGenerator.grid[GetNeinbourInDirection(cellToCollapse.CellIndex, direction, gridGenerator.gridHeight)];
-
-        //    List<GameObject> invalidTiles = new List<GameObject>();
-        //    // TODO: ERROR CAUSED BY CHECKING AND REMOVING FROM LIST: InvalidOperationException: Collection was modified; enumeration operation may not execute.
-        //    foreach (GameObject tile in neighbours[(int)direction].possibleTiles)
-        //    {
-        //        Socket oppositeSocket = tile.GetComponent<Tile>().sockets[(int)direction.GetOppositeDirection()];
-
-        //        foreach (var validNeighbour in oppositeSocket.validNeighbours)
-        //        {
-        //            // if tile is not valid add to list to remove
-        //            if (validNeighbour != thisSocket.value)
-        //            {
-        //                invalidTiles.Add(tile);
-        //            }
-        //        }
-        //    }
-
-        //    // remove tiles from neighbours possible tileset
-        //    foreach (GameObject invlaidTile in invalidTiles)
-        //    {
-        //        neighbours[(int)direction].RemovePossibleTile(invlaidTile);
-        //    }
-        //}
     }
 
     /// <summary>

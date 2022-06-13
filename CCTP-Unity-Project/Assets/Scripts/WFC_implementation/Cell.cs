@@ -83,6 +83,10 @@ public class Cell
         }
     }
 
+    /// <summary>
+    /// Get the entropy of the cell
+    /// </summary>
+    /// <returns> The number of possible tiles remaining for the cell /returns>
     public int GetEntropy()
     {
         return possibleTiles.Count;
