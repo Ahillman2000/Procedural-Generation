@@ -8,8 +8,8 @@ using WaveFunctionCollapse;
 public class Cell
 {
     public int CellIndex { get; set; } = 0;
-    [SerializeField] private Vector3 position = Vector3.zero;
-    [SerializeField] public List<GameObject> possibleTiles;
+    public Vector3 position = Vector3.zero;
+    public List<GameObject> possibleTiles;
 
     public bool Collapsed { get; set; } = false;
 
@@ -38,8 +38,7 @@ public class Cell
     public void SetTile(GameObject tile)
     {
         this.tile = tile;
-        GameObject tileObj = GameObject.Instantiate(tile, position, Quaternion.identity);
-        tileObj.transform.parent = parentObj.transform;
+        GameObject tileObj = GameObject.Instantiate(tile, position, Quaternion.identity, parentObj.transform);
     }
 
     /// <summary>
@@ -76,11 +75,8 @@ public class Cell
             {
                 return;
             }
-            else
-            {
-                possibleTiles.Add(tileToAdd);
-            }
         }
+        possibleTiles.Add(tileToAdd);
     }
 
     /// <summary>

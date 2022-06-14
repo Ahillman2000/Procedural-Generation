@@ -9,17 +9,25 @@ public class GridGenerator : MonoBehaviour
 {
     [SerializeField] string mapName = "===== MAP =====";
 
-    [Range(1, 10)] public int gridWidth;
-    [Range(1, 10)] public int gridHeight;
+    [Range(2, 20)] public int gridDimensionSquared = 2;
 
     [SerializeField] private float tileOffset = 5f;
 
     [SerializeField] public List<GameObject> tilePrefabs;
     [SerializeField] GameObject spherePrefab;
+    GameObject debugSphere;
+    List<GameObject> debugSpheres = new List<GameObject>();
 
     public List<Cell> grid = new List<Cell>();
 
+    private GameObject map;
+
     void Start()
+    {
+
+    }
+
+    void Update()
     {
 
     }
@@ -45,57 +53,57 @@ public class GridGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// WFC function
+    /// Main WFC function
     /// </summary>
     public void GenerateTiles()
     {
-        GameObject map = GenerateNewMap();
-        GenerateNewGrid(map);
+        GenerateNewMap();
+        GenerateNewGrid();
     }
 
     // TODO: should be made public and return grid
     /// <summary>
     /// Creates cells for the new grid
     /// </summary>
-    /// <param name="map"> The object that the cells will be parented to </param>
-    private void GenerateNewGrid(GameObject map)
+    private void GenerateNewGrid()
     {
         grid.Clear();
+        debugSpheres.Clear();
 
-        GameObject debugSpheres = new GameObject("debugSpheres");
-        debugSpheres.transform.parent = map.transform;
+        debugSphere = new GameObject("debugSpheres");
+        debugSphere.transform.parent = map.transform;
 
-        for (int row = 0; row < gridWidth; row++)
+        for (int row = 0; row < gridDimensionSquared; row++)
         {
-            for (int col = 0; col < gridHeight; col++)
+            for (int col = 0; col < gridDimensionSquared; col++)
             {
-                int i = HelperFunctions.ConvertTo1dArray(row, col, gridWidth);
+                int i = HelperFunctions.ConvertTo1dArray(row, col, gridDimensionSquared);
 
-                Vector3 tilePositionOffset = new Vector3(-gridWidth * tileOffset / 2, 0, -gridHeight * tileOffset / 2);
+                Vector3 tilePositionOffset = new Vector3(-gridDimensionSquared * tileOffset / 2, 0, -gridDimensionSquared * tileOffset / 2);
                 Vector3 tilePosition = tilePositionOffset + new Vector3(row * tileOffset, 0, col * tileOffset) + new Vector3(tileOffset / 2, 0, tileOffset / 2);
 
                 Cell cell = new Cell(map, i, tilePosition, tilePrefabs);
+
                 GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
-                debugSphere.transform.parent = debugSpheres.transform;
+                debugSphere.name = "Sphere (" + row + " , " + col + ")";
+                debugSpheres.Add(debugSphere);
+                debugSphere.transform.parent = this.debugSphere.transform;
                 grid.Add(cell);
             }
         }
-
-
     }
 
     /// <summary>
     /// Creates an object to store everything in the hierarchy
     /// </summary>
     /// <returns> A new blank gameObject</returns>
-    private GameObject GenerateNewMap()
+    private void GenerateNewMap()
     {
         if (GameObject.Find(mapName))
         {
             DestroyImmediate(GameObject.Find(mapName));
         }
-        GameObject map = new GameObject(mapName);
-        return map;
+        map = new GameObject(mapName);
     }
 
     /// <summary>
@@ -110,7 +118,6 @@ public class GridGenerator : MonoBehaviour
     {
         Cell lowestEntropyCell = null;
 
-        // sets the lowestEntropyCell (LEC) to first uncollapsed cell
         foreach (Cell cell in grid)
         { 
             if (!cell.Collapsed)
@@ -120,7 +127,6 @@ public class GridGenerator : MonoBehaviour
             }
         }
 
-        // loops through grid to find and set LEC
         foreach (Cell cell in grid)
         {
             if(cell.GetEntropy() < lowestEntropyCell.GetEntropy() && !cell.Collapsed)
@@ -129,10 +135,6 @@ public class GridGenerator : MonoBehaviour
             }
         }
 
-        /* 
-         check that the LEC is the only one with this entropy value,
-         if other cells with the lowest entropy are found then add them to a list
-        */
         List<Cell> lowestEntropyCells = new List<Cell>();
         foreach (Cell cell in grid)
         {
@@ -142,24 +144,38 @@ public class GridGenerator : MonoBehaviour
             }
         }
 
-        // if there are more than 1 LECs then return a random cell from list of LECs, otherwise return the LEC
         if (lowestEntropyCells.Count > 1)
         {
-            Debug.Log("No lowest entropy cell found, returning random cell");
-
             Cell randomCell = SelectRandomCell(lowestEntropyCells);
 
             return randomCell;
         }
         else
         {
-            Debug.Log("Lowest entropy cell found");
             return lowestEntropyCells[0];
         }
     }
-  
-    void Update()
+
+    /// <summary>
+    /// instantiates the posibles tiles as gameobjects around the cell
+    /// </summary>
+    /// <param name="cell"> The given cell </param>
+    public void ShowPossibleTilesetinCell(Cell cell)
     {
-        
+        int numberOfCells = cell.possibleTiles.Count;
+        int gridDimension = (int)Mathf.Sqrt(numberOfCells);
+        int i = 0;
+
+        foreach (GameObject possibleTile in cell.possibleTiles)
+        {
+            GameObject tileInstance = Instantiate(possibleTile, cell.position, Quaternion.identity, debugSpheres[cell.CellIndex].transform);
+            tileInstance.transform.localScale /= gridDimension;
+
+            Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(i, gridDimension).x * tileOffset * tileInstance.transform.localScale.x, 0, HelperFunctions.ConvertTo2dArray(i, gridDimension).y * tileOffset * tileInstance.transform.localScale.z);
+            Vector3 cellPositionOffset = new Vector3(-tileOffset / 2 * tileInstance.transform.localScale.x, 0, -tileOffset / 2 * tileInstance.transform.localScale.z);
+
+            tileInstance.transform.localPosition = cellPosition + cellPositionOffset;
+            i++;
+        }
     }
 }

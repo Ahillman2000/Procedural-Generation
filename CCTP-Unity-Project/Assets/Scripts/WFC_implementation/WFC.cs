@@ -16,6 +16,11 @@ public class WFC : MonoBehaviour
         
     }
 
+    void Update()
+    {
+
+    }
+
     /// <summary>
     /// A container to store a neighbouring cell and the direction from the collapsing cell towards it
     /// </summary>
@@ -35,21 +40,19 @@ public class WFC : MonoBehaviour
         // collapse primary cell
         Cell cellToCollapse = gridGenerator.GetCellWithLowestEntropy();
 
-        Debug.Log("Collapsing cell: " + HelperFunctions.ConvertTo2dArray(cellToCollapse.CellIndex, gridGenerator.gridWidth));
         while (!cellToCollapse.Collapsed)
         {
             cellToCollapse.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
         }
 
-        // get cells in valid directions
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
         foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
-            if (HelperFunctions.CheckForValidNeighbourInDirection(cellToCollapse.CellIndex, gridGenerator.gridHeight, gridGenerator.gridWidth, direction))
+            if (HelperFunctions.CheckForValidNeighbourInDirection(cellToCollapse.CellIndex, gridGenerator.gridDimensionSquared, gridGenerator.gridDimensionSquared, direction))
             {
                 ValidNeighbour validNeighbour = new ValidNeighbour
                 {
-                    cell = gridGenerator.grid[GetNeinbourInDirection(cellToCollapse.CellIndex, direction, gridGenerator.gridHeight)],
+                    cell = gridGenerator.grid[GetNeinbourInDirection(cellToCollapse.CellIndex, direction, gridGenerator.gridDimensionSquared)],
                     conectionDirection = direction
                 };
                 validNeighbours.Add(validNeighbour);
@@ -57,7 +60,6 @@ public class WFC : MonoBehaviour
             /*else Debug.Log(direction + " is NOT valid");*/
         }
 
-        // see if the potential neighbours have an invalid socket that does not fit with this tiles socket
         foreach (ValidNeighbour validNeighbour in validNeighbours)
         {
             Socket currentSocket = cellToCollapse.GetTile().GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
@@ -76,7 +78,6 @@ public class WFC : MonoBehaviour
                 }
             }
 
-            // eliminate invalid tiles from the neighbours possible tileset
             foreach (GameObject invalidTile in invalidTiles)
             {
                 validNeighbour.cell.RemovePossibleTile(invalidTile);
@@ -107,10 +108,5 @@ public class WFC : MonoBehaviour
                 Debug.LogWarning("No tile in given direction");
                 return index;
         }
-    }
-
-    void Update()
-    {
-        
     }
 }
