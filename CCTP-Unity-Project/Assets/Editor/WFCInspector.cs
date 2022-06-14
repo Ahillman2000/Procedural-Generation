@@ -29,9 +29,9 @@ public class WFCInspector : Editor
     {
         DrawDefaultInspector();
         WFC WFC = (WFC)target;
-        if (GUILayout.Button("Collapse Cells"))
+        if (GUILayout.Button("Collpase and Propagate"))
         {
-            WFC.CollpaseCell();
+            WFC.Algorithm();
         }
     }
 }

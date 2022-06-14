@@ -30,29 +30,44 @@ public class WFC : MonoBehaviour
         public Direction conectionDirection;
     }
 
+    public void Algorithm()
+    {
+        /*while(NumberOfTilesCollapsed != gridGenerator.grid.Count)
+        {
+
+        }*/
+
+        // collapse primary cell
+        Cell cell = gridGenerator.GetCellWithLowestEntropy();
+        CollapseCell(cell);
+        Propagate(cell);
+    }
+
+
     /// <summary>
     /// collapses an initial cell to a single tile, checks each cardinal direction, gets the socket in that direction,
     /// gets the neighbour in direction, iterates through neighbours possible tileset, gets the socket in the opposite direction
     /// if the valid neighbour of that socket isnt the value of this socket then remove the possible tile from the set
     /// </summary>
-    public void CollpaseCell()
+    public void CollapseCell(Cell collapsingCell)
     {
-        // collapse primary cell
-        Cell cellToCollapse = gridGenerator.GetCellWithLowestEntropy();
-
-        while (!cellToCollapse.Collapsed)
+        while (!collapsingCell.Collapsed)
         {
-            cellToCollapse.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
+            collapsingCell.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
         }
+    }
 
+    private void Propagate(Cell propagatingCell)
+    {
+        // propagate neighbouring cells
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
         foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
-            if (HelperFunctions.CheckForValidNeighbourInDirection(cellToCollapse.CellIndex, gridGenerator.gridDimensionSquared, gridGenerator.gridDimensionSquared, direction))
+            if (HelperFunctions.CheckForValidNeighbourInDirection(propagatingCell.CellIndex, gridGenerator.gridDimensionSquared, gridGenerator.gridDimensionSquared, direction))
             {
                 ValidNeighbour validNeighbour = new ValidNeighbour
                 {
-                    cell = gridGenerator.grid[GetNeinbourInDirection(cellToCollapse.CellIndex, direction, gridGenerator.gridDimensionSquared)],
+                    cell = gridGenerator.grid[GetNeinbourInDirection(propagatingCell.CellIndex, direction, gridGenerator.gridDimensionSquared)],
                     conectionDirection = direction
                 };
                 validNeighbours.Add(validNeighbour);
@@ -62,8 +77,8 @@ public class WFC : MonoBehaviour
 
         foreach (ValidNeighbour validNeighbour in validNeighbours)
         {
-            Socket currentSocket = cellToCollapse.GetTile().GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
-            
+            Socket currentSocket = propagatingCell.GetTile().GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
+
             List<GameObject> invalidTiles = new List<GameObject>();
 
             foreach (GameObject possibleTile in validNeighbour.cell.possibleTiles)
@@ -78,9 +93,16 @@ public class WFC : MonoBehaviour
                 }
             }
 
-            foreach (GameObject invalidTile in invalidTiles)
+            if (invalidTiles.Count != 0)
             {
-                validNeighbour.cell.RemovePossibleTile(invalidTile);
+                foreach (GameObject invalidTile in invalidTiles)
+                {
+                    validNeighbour.cell.RemovePossibleTile(invalidTile);
+                }
+            }
+            else
+            {
+                // the neighbouring cell cannot be propagated
             }
         }
     }

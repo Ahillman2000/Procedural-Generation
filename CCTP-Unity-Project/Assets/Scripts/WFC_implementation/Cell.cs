@@ -16,6 +16,8 @@ public class Cell
     [SerializeField] private GameObject tile;
     readonly GameObject parentObj;
 
+    private WFC collapser;
+
     /// <summary>
     /// Creates a new cell with the following params
     /// </summary>
@@ -29,6 +31,8 @@ public class Cell
         this.position = position;
         this.possibleTiles = new List<GameObject>(possibleTiles);
         this.parentObj = parentObj;
+
+        collapser = GameObject.Find("WFC collapser").GetComponent<WFC>();
     }
 
     /// <summary>
@@ -60,6 +64,7 @@ public class Cell
         {
             Collapsed = true;
             SetTile(possibleTiles[0]);
+            collapser.NumberOfTilesCollapsed++;
         }
     }
 
