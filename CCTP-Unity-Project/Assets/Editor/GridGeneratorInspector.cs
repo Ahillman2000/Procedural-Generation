@@ -13,7 +13,7 @@ public class GridGeneratorInspector : Editor
 
         if (GUILayout.Button("GenerateGrid"))
         {
-            gj.GenerateTiles();
+            gj.GenerateGrid();
         }
     }
 }

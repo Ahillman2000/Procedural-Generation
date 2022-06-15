@@ -13,10 +13,10 @@ public class GridGenerator : MonoBehaviour
 
     [SerializeField] private float tileOffset = 5f;
 
-    [SerializeField] public List<GameObject> tilePrefabs;
-    [SerializeField] GameObject spherePrefab;
-    GameObject debugSphere;
-    List<GameObject> debugSpheres = new List<GameObject>();
+    public List<GameObject> tilePrefabs;
+    [SerializeField] private GameObject spherePrefab;
+    private GameObject debugSphere;
+    private List<GameObject> debugSpheres = new List<GameObject>();
 
     public List<Cell> grid = new List<Cell>();
 
@@ -53,12 +53,25 @@ public class GridGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Main WFC function
+    /// Generates the map and grid to be solved
     /// </summary>
-    public void GenerateTiles()
+    public void GenerateGrid()
     {
         GenerateNewMap();
         GenerateNewGrid();
+    }
+
+    /// <summary>
+    /// Creates an object to store everything in the hierarchy
+    /// </summary>
+    /// <returns> A new blank gameObject</returns>
+    private void GenerateNewMap()
+    {
+        if (GameObject.Find(mapName))
+        {
+            DestroyImmediate(GameObject.Find(mapName));
+        }
+        map = new GameObject(mapName);
     }
 
     // TODO: should be made public and return grid
@@ -91,19 +104,6 @@ public class GridGenerator : MonoBehaviour
                 grid.Add(cell);
             }
         }
-    }
-
-    /// <summary>
-    /// Creates an object to store everything in the hierarchy
-    /// </summary>
-    /// <returns> A new blank gameObject</returns>
-    private void GenerateNewMap()
-    {
-        if (GameObject.Find(mapName))
-        {
-            DestroyImmediate(GameObject.Find(mapName));
-        }
-        map = new GameObject(mapName);
     }
 
     /// <summary>

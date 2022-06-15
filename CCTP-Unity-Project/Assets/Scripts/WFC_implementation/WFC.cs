@@ -9,7 +9,7 @@ public class WFC : MonoBehaviour
 {
     [SerializeField] private GridGenerator gridGenerator;
 
-    public int NumberOfTilesCollapsed { get; set; } = 0;
+    private int numberOfTilesCollapsed;
 
     void Start()
     {
@@ -30,79 +30,107 @@ public class WFC : MonoBehaviour
         public Direction conectionDirection;
     }
 
-    public void Algorithm()
+    /// <summary>
+    /// The complete WFC algorithm to create a grid and solve it
+    /// BROKEN
+    /// </summary>
+    public void WFCAlgorithm()
     {
-        /*while(NumberOfTilesCollapsed != gridGenerator.grid.Count)
+        gridGenerator.GenerateGrid();
+        Solve();
+    }
+
+    /// <summary>
+    /// The main WFC solver algorithm
+    /// </summary>
+    public void Solve()
+    {
+        numberOfTilesCollapsed = 0;
+
+        while (numberOfTilesCollapsed < gridGenerator.grid.Count)
         {
+            Iterate();
+            Debug.Log("iteration complete");
+        }
+        Debug.Log("Grid fully collapsed. " + numberOfTilesCollapsed + " tiles collapsed");
+    }
 
-        }*/
-
-        // collapse primary cell
+    /// <summary>
+    /// A single iteration of the wave collapse function
+    /// </summary>
+    public void Iterate()
+    {
         Cell cell = gridGenerator.GetCellWithLowestEntropy();
+        Debug.Log("collapsing cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimensionSquared));
         CollapseCell(cell);
         Propagate(cell);
     }
 
-
     /// <summary>
-    /// collapses an initial cell to a single tile, checks each cardinal direction, gets the socket in that direction,
-    /// gets the neighbour in direction, iterates through neighbours possible tileset, gets the socket in the opposite direction
-    /// if the valid neighbour of that socket isnt the value of this socket then remove the possible tile from the set
+    /// collapses a given cell to a single tile
     /// </summary>
-    public void CollapseCell(Cell collapsingCell)
+    public void CollapseCell(Cell cellToCollapse)
     {
-        while (!collapsingCell.Collapsed)
+        while (!cellToCollapse.Collapsed)
         {
-            collapsingCell.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
+            cellToCollapse.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
         }
     }
 
-    private void Propagate(Cell propagatingCell)
+    /// <summary>
+    /// Removes any invalid possible tiles from neighbouring tilesets after a cell has been collapsed
+    /// </summary>
+    /// <param name="cellToPropagate"> The cell to propagate out from </param>
+    private void Propagate(Cell cellToPropagate)
     {
-        // propagate neighbouring cells
-        List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
-        foreach (Direction direction in Enum.GetValues(typeof(Direction)))
+        Stack<Cell> stack = new Stack<Cell>();
+        stack.Push(cellToPropagate);
+
+        while (stack.Count > 0)
         {
-            if (HelperFunctions.CheckForValidNeighbourInDirection(propagatingCell.CellIndex, gridGenerator.gridDimensionSquared, gridGenerator.gridDimensionSquared, direction))
+            Cell curentCell = stack.Pop();
+            bool addCellToStack = false;
+            foreach (var validNeighbour in GetValidNeighbours(curentCell))
             {
-                ValidNeighbour validNeighbour = new ValidNeighbour
+                Cell neighbouringCell = validNeighbour.cell;
+
+                foreach (GameObject posibleTile in curentCell.possibleTiles)
                 {
-                    cell = gridGenerator.grid[GetNeinbourInDirection(propagatingCell.CellIndex, direction, gridGenerator.gridDimensionSquared)],
-                    conectionDirection = direction
-                };
-                validNeighbours.Add(validNeighbour);
-            }
-            /*else Debug.Log(direction + " is NOT valid");*/
-        }
+                    Socket currentSocket = posibleTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
+                    List<GameObject> invalidTiles = new List<GameObject>();
 
-        foreach (ValidNeighbour validNeighbour in validNeighbours)
-        {
-            Socket currentSocket = propagatingCell.GetTile().GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
-
-            List<GameObject> invalidTiles = new List<GameObject>();
-
-            foreach (GameObject possibleTile in validNeighbour.cell.possibleTiles)
-            {
-                Socket oppositeSocket = possibleTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection.GetOppositeDirection()];
-                foreach (var validNeighbourTile in oppositeSocket.validNeighbours)
-                {
-                    if (validNeighbourTile != currentSocket.value)
+                    foreach (GameObject possibleNeighbouringTile in neighbouringCell.possibleTiles)
                     {
-                        invalidTiles.Add(possibleTile);
+                        Socket oppositeSocket = possibleNeighbouringTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection.GetOppositeDirection()];
+
+                        foreach (var neighbour in oppositeSocket.validNeighbours)
+                        {
+                            if (neighbour != currentSocket.value)
+                            {
+                                invalidTiles.Add(possibleNeighbouringTile);
+                            }
+                        }
+                    }
+
+                    if (invalidTiles.Count > 0)
+                    {
+                        foreach (GameObject invalidTile in invalidTiles)
+                        {
+                            validNeighbour.cell.RemovePossibleTile(invalidTile);
+                            addCellToStack = true;
+                            //stack.Push(validNeighbour.cell);
+                        }
+                    }
+                    else
+                    {
+                        // the neighbouring cell cannot be propagated
                     }
                 }
-            }
 
-            if (invalidTiles.Count != 0)
-            {
-                foreach (GameObject invalidTile in invalidTiles)
+                if(addCellToStack)
                 {
-                    validNeighbour.cell.RemovePossibleTile(invalidTile);
+                    stack.Push(validNeighbour.cell);
                 }
-            }
-            else
-            {
-                // the neighbouring cell cannot be propagated
             }
         }
     }
@@ -130,5 +158,33 @@ public class WFC : MonoBehaviour
                 Debug.LogWarning("No tile in given direction");
                 return index;
         }
+    }
+
+    private List<ValidNeighbour> GetValidNeighbours(Cell cell)
+    {
+        List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
+        foreach (Direction direction in Enum.GetValues(typeof(Direction)))
+        {
+            if (HelperFunctions.CheckForValidNeighbourInDirection(cell.CellIndex, gridGenerator.gridDimensionSquared, gridGenerator.gridDimensionSquared, direction))
+            {
+                ValidNeighbour validNeighbour = new ValidNeighbour
+                {
+                    cell = gridGenerator.grid[GetNeinbourInDirection(cell.CellIndex, direction, gridGenerator.gridDimensionSquared)],
+                    conectionDirection = direction
+                };
+
+                if (!validNeighbour.cell.Collapsed)
+                {
+                    validNeighbours.Add(validNeighbour);
+                }
+            }
+            /*else Debug.Log(direction + " is NOT valid");*/
+        }
+        return validNeighbours;
+    }
+
+    public void OnCellCollapse()
+    {
+        numberOfTilesCollapsed++;
     }
 }

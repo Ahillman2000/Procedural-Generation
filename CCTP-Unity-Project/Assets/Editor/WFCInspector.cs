@@ -29,9 +29,14 @@ public class WFCInspector : Editor
     {
         DrawDefaultInspector();
         WFC WFC = (WFC)target;
-        if (GUILayout.Button("Collpase and Propagate"))
+
+        if (GUILayout.Button("Single WFC Iteration"))
         {
-            WFC.Algorithm();
+            WFC.Iterate();
+        }
+        if (GUILayout.Button("Solve"))
+        {
+            WFC.Solve();
         }
     }
 }

@@ -42,7 +42,7 @@ public class Cell
     public void SetTile(GameObject tile)
     {
         this.tile = tile;
-        GameObject tileObj = GameObject.Instantiate(tile, position, Quaternion.identity, parentObj.transform);
+        GameObject.Instantiate(tile, position, Quaternion.identity, parentObj.transform);
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ public class Cell
         {
             Collapsed = true;
             SetTile(possibleTiles[0]);
-            collapser.NumberOfTilesCollapsed++;
+            collapser.OnCellCollapse();
         }
     }
 

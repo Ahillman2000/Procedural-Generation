@@ -5,9 +5,4 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public Socket[] sockets = new Socket[4];
-     
-    private void Start()
-    {
-
-    }
 }
