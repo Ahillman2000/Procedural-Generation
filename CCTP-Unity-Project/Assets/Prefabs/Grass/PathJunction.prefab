@@ -54,7 +54,11 @@ MonoBehaviour:
   - direction: 3
     value: 2
   tileSet: {fileID: 11400000, guid: 7efb92bb395be044ba477eb719313fd9, type: 2}
-  validNeighbouringTiles: []
+  neighbourList:
+  - list: []
+  - list: []
+  - list: []
+  - list: []
 --- !u!1001 &9134264270210750456
 PrefabInstance:
   m_ObjectHideFlags: 0

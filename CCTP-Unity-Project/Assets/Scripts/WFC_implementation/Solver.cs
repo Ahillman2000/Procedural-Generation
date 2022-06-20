@@ -131,18 +131,21 @@ public class Solver : MonoBehaviour
         {
             Cell curentCell = stack.Pop();
 
-            // loops through each neighbour
+            // loops through each valid neighbour
             foreach (ValidNeighbour neighbour in GetValidNeighbours(curentCell))
             {
+                // the cell that will be checked against
                 Cell neighbouringCell = neighbour.cell;
+                // the possible tiles in that cell
                 var tilesToCheckAgainst = neighbouringCell.possibleTiles;
 
-                var validNeighboursForThisCell = curentCell.GetTile().validNeighbouringTiles;
 
-                foreach (var otherTile in tilesToCheckAgainst)
-                {
-                    if(otherTile)
-                }
+                //var validNeighboursForThisCell = curentCell.GetTile().validNeighbouringTiles;
+
+                //foreach (var otherTile in tilesToCheckAgainst)
+                //{
+                //    if(otherTile)
+                //}
             }
         }
     }
