@@ -9,7 +9,7 @@ public class GridGenerator : MonoBehaviour
 {
     [SerializeField] string mapName = "===== MAP =====";
 
-    [Range(2, 20)] public int gridDimensionSquared = 2;
+    [Range(2, 20)] public int gridDimension = 2;
 
     [SerializeField] private float tileOffset = 5f;
 
@@ -29,7 +29,10 @@ public class GridGenerator : MonoBehaviour
 
     void Update()
     {
-
+        /*if (Input.GetMouseButtonDown(0))
+        {
+            ManuallyAssignTileToCell();
+        }*/
     }
 
     /// <summary>
@@ -59,6 +62,15 @@ public class GridGenerator : MonoBehaviour
     {
         GenerateNewMap();
         GenerateNewGrid();
+
+        Camera cam = Camera.main;
+        Vector3 camPos = cam.transform.position;
+        cam.transform.position = new Vector3(camPos.x, gridDimension * 7, camPos.z);
+
+        /*foreach (Cell cell in grid)
+        {
+            ShowPossibleTilesetinCell(cell);
+        }*/
     }
 
     /// <summary>
@@ -86,13 +98,13 @@ public class GridGenerator : MonoBehaviour
         debugSphere = new GameObject("debugSpheres");
         debugSphere.transform.parent = map.transform;
 
-        for (int row = 0; row < gridDimensionSquared; row++)
+        for (int row = 0; row < gridDimension; row++)
         {
-            for (int col = 0; col < gridDimensionSquared; col++)
+            for (int col = 0; col < gridDimension; col++)
             {
-                int i = HelperFunctions.ConvertTo1dArray(row, col, gridDimensionSquared);
+                int i = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
 
-                Vector3 tilePositionOffset = new Vector3(-gridDimensionSquared * tileOffset / 2, 0, -gridDimensionSquared * tileOffset / 2);
+                Vector3 tilePositionOffset = new Vector3(-gridDimension * tileOffset / 2, 0, -gridDimension * tileOffset / 2);
                 Vector3 tilePosition = tilePositionOffset + new Vector3(row * tileOffset, 0, col * tileOffset) + new Vector3(tileOffset / 2, 0, tileOffset / 2);
 
                 Cell cell = new Cell(map, i, tilePosition, tilePrefabs);
@@ -171,11 +183,50 @@ public class GridGenerator : MonoBehaviour
             GameObject tileInstance = Instantiate(possibleTile, cell.position, Quaternion.identity, debugSpheres[cell.CellIndex].transform);
             tileInstance.transform.localScale /= gridDimension;
 
-            Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(i, gridDimension).x * tileOffset * tileInstance.transform.localScale.x, 0, HelperFunctions.ConvertTo2dArray(i, gridDimension).y * tileOffset * tileInstance.transform.localScale.z);
+            Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(i, gridDimension).x * tileOffset * tileInstance.transform.localScale.x, -5, HelperFunctions.ConvertTo2dArray(i, gridDimension).y * tileOffset * tileInstance.transform.localScale.z);
             Vector3 cellPositionOffset = new Vector3(-tileOffset / 2 * tileInstance.transform.localScale.x, 0, -tileOffset / 2 * tileInstance.transform.localScale.z);
 
             tileInstance.transform.localPosition = cellPosition + cellPositionOffset;
             i++;
         }
     }
+
+    //TODO: extract out into own script
+    /*public void ManuallyAssignTileToCell()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            Vector3 hitPosition = hit.point;
+            GameObject hitObject = hit.transform.gameObject;
+
+            Vector3 hitCellPos = HitToCellPos(hitPosition, tileOffset);
+            Vector2Int hitCellCoords2D = new Vector2Int((int)(hitCellPos.x + tileOffset), (int)(hitCellPos.z + tileOffset));
+            int hitCellIndex = (int)(HelperFunctions.ConvertTo1dArray(hitCellCoords2D.x, hitCellCoords2D.y, gridDimensionSquared) / tileOffset);
+
+            if (hitObject.transform.parent != null && hitObject.transform.parent.GetComponent<Tile>() != null)
+            {
+                Debug.Log("Hit " + hitObject.transform.parent.gameObject);
+                Debug.Log("Hit tile belonging to cell: " + hitCellIndex);
+                //grid[hitCellIndex].SetTile(hitObject.transform.parent.gameObject);
+            }
+        }
+    }
+
+    /// <summary>
+    /// https://www.reddit.com/r/Unity3D/comments/38bvns/round_to_even_number_or_nearest_5_in_c/
+    /// </summary>
+    public Vector3 HitToCellPos(Vector3 input, float factor)
+    {
+        if (factor <= 0f)
+            throw new UnityException("factor argument must be above 0");
+
+        float x = Mathf.Round(input.x / factor) * factor;
+        float y = Mathf.Round(input.y / factor) * factor;
+        float z = Mathf.Round(input.z / factor) * factor;
+
+        return new Vector3(x, y, z);
+    }*/
 }

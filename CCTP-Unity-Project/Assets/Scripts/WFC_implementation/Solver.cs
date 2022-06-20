@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WaveFunctionCollapse;
 
-public class WFC : MonoBehaviour
+public class Solver : MonoBehaviour
 {
     [SerializeField] private GridGenerator gridGenerator;
 
@@ -31,16 +31,6 @@ public class WFC : MonoBehaviour
     }
 
     /// <summary>
-    /// The complete WFC algorithm to create a grid and solve it
-    /// BROKEN
-    /// </summary>
-    public void WFCAlgorithm()
-    {
-        gridGenerator.GenerateGrid();
-        Solve();
-    }
-
-    /// <summary>
     /// The main WFC solver algorithm
     /// </summary>
     public void Solve()
@@ -50,9 +40,7 @@ public class WFC : MonoBehaviour
         while (numberOfTilesCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
-            Debug.Log("iteration complete");
         }
-        Debug.Log("Grid fully collapsed. " + numberOfTilesCollapsed + " tiles collapsed");
     }
 
     /// <summary>
@@ -61,7 +49,7 @@ public class WFC : MonoBehaviour
     public void Iterate()
     {
         Cell cell = gridGenerator.GetCellWithLowestEntropy();
-        Debug.Log("collapsing cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimensionSquared));
+        Debug.Log("Cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimension) + " chosen to collapse");
         CollapseCell(cell);
         Propagate(cell);
     }
@@ -119,6 +107,7 @@ public class WFC : MonoBehaviour
                             validNeighbour.cell.RemovePossibleTile(invalidTile);
                             addCellToStack = true;
                             //stack.Push(validNeighbour.cell);
+                            Debug.Log("cell: " + HelperFunctions.ConvertTo2dArray(curentCell.CellIndex, gridGenerator.gridDimension) + " had tile: " + invalidTile.name + " removed");
                         }
                     }
                     else
@@ -165,11 +154,11 @@ public class WFC : MonoBehaviour
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
         foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
-            if (HelperFunctions.CheckForValidNeighbourInDirection(cell.CellIndex, gridGenerator.gridDimensionSquared, gridGenerator.gridDimensionSquared, direction))
+            if (HelperFunctions.CheckForValidNeighbourInDirection(cell.CellIndex, gridGenerator.gridDimension, gridGenerator.gridDimension, direction))
             {
                 ValidNeighbour validNeighbour = new ValidNeighbour
                 {
-                    cell = gridGenerator.grid[GetNeinbourInDirection(cell.CellIndex, direction, gridGenerator.gridDimensionSquared)],
+                    cell = gridGenerator.grid[GetNeinbourInDirection(cell.CellIndex, direction, gridGenerator.gridDimension)],
                     conectionDirection = direction
                 };
 

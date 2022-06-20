@@ -16,7 +16,7 @@ public class Cell
     [SerializeField] private GameObject tile;
     readonly GameObject parentObj;
 
-    private WFC collapser;
+    private Solver solver;
 
     /// <summary>
     /// Creates a new cell with the following params
@@ -32,7 +32,7 @@ public class Cell
         this.possibleTiles = new List<GameObject>(possibleTiles);
         this.parentObj = parentObj;
 
-        collapser = GameObject.Find("WFC collapser").GetComponent<WFC>();
+        solver = GameObject.Find("WFC Solver").GetComponent<Solver>();
     }
 
     /// <summary>
@@ -54,17 +54,13 @@ public class Cell
         if(possibleTiles.Contains(tileToRemove))
         {
             possibleTiles.Remove(tileToRemove);
-        }
-        else
-        {
-            return;
-        }
 
-        if (possibleTiles.Count == 1)
-        {
-            Collapsed = true;
-            SetTile(possibleTiles[0]);
-            collapser.OnCellCollapse();
+            if (possibleTiles.Count == 1)
+            {
+                Collapsed = true;
+                SetTile(possibleTiles[0]);
+                solver.OnCellCollapse();
+            }
         }
     }
 
