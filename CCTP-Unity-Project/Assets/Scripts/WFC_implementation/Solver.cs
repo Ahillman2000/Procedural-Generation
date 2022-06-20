@@ -51,7 +51,7 @@ public class Solver : MonoBehaviour
         Cell cell = gridGenerator.GetCellWithLowestEntropy();
         Debug.Log("Cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimension) + " chosen to collapse");
         CollapseCell(cell);
-        Propagate(cell);
+        //Propagate(cell);
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ public class Solver : MonoBehaviour
     {
         while (!cellToCollapse.Collapsed)
         {
-            cellToCollapse.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
+            cellToCollapse.RemovePossibleTile(cellToCollapse.SelectRandomPossibleTile());
         }
     }
 
@@ -69,7 +69,7 @@ public class Solver : MonoBehaviour
     /// Removes any invalid possible tiles from neighbouring tilesets after a cell has been collapsed
     /// </summary>
     /// <param name="cellToPropagate"> The cell to propagate out from </param>
-    private void Propagate(Cell cellToPropagate)
+    /*private void Propagate(Cell cellToPropagate)
     {
         Stack<Cell> stack = new Stack<Cell>();
         stack.Push(cellToPropagate);
@@ -106,8 +106,6 @@ public class Solver : MonoBehaviour
                         {
                             validNeighbour.cell.RemovePossibleTile(invalidTile);
                             addCellToStack = true;
-                            //stack.Push(validNeighbour.cell);
-                            Debug.Log("cell: " + HelperFunctions.ConvertTo2dArray(curentCell.CellIndex, gridGenerator.gridDimension) + " had tile: " + invalidTile.name + " removed");
                         }
                     }
                     else
@@ -119,6 +117,31 @@ public class Solver : MonoBehaviour
                 if(addCellToStack)
                 {
                     stack.Push(validNeighbour.cell);
+                }
+            }
+        }
+    }*/
+
+    private void Propagate(Cell cellToPropagate)
+    {
+        Stack<Cell> stack = new Stack<Cell>();
+        stack.Push(cellToPropagate);
+
+        while (stack.Count > 0)
+        {
+            Cell curentCell = stack.Pop();
+
+            // loops through each neighbour
+            foreach (ValidNeighbour neighbour in GetValidNeighbours(curentCell))
+            {
+                Cell neighbouringCell = neighbour.cell;
+                var tilesToCheckAgainst = neighbouringCell.possibleTiles;
+
+                var validNeighboursForThisCell = curentCell.GetTile().validNeighbouringTiles;
+
+                foreach (var otherTile in tilesToCheckAgainst)
+                {
+                    if(otherTile)
                 }
             }
         }

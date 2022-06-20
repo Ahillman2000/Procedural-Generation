@@ -47,16 +47,14 @@ MonoBehaviour:
   sockets:
   - direction: 0
     value: 1
-    validNeighbours: 01000000
   - direction: 1
     value: 1
-    validNeighbours: 01000000
   - direction: 2
     value: 2
-    validNeighbours: 02000000
   - direction: 3
     value: 0
-    validNeighbours: 00000000
+  tileSet: {fileID: 11400000, guid: 7efb92bb395be044ba477eb719313fd9, type: 2}
+  validNeighbouringTiles: []
 --- !u!1 &8707499594849498392
 GameObject:
   m_ObjectHideFlags: 0

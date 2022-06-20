@@ -12,5 +12,5 @@ public struct Socket
 {
     public Direction direction;
     public TileValue value;
-    public List<TileValue> validNeighbours;
+    //public List<TileValue> validNeighbours;
 }

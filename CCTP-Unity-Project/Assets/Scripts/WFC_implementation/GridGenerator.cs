@@ -36,16 +36,6 @@ public class GridGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Selects a random tile from a give list of objects
-    /// </summary>
-    /// <param name="tiles"> The list of objects to iterate through </param>
-    /// <returns> The randomly selected tile </returns>
-    public GameObject SelectRandomTile(List<GameObject> tiles)
-    {
-        return tiles[UnityEngine.Random.Range(0, tiles.Count)];
-    }
-
-    /// <summary>
     /// Selects a random Cell from a give list of cells
     /// </summary>
     /// <param name="cells"> The list of cells to iterate through </param>
@@ -126,6 +116,8 @@ public class GridGenerator : MonoBehaviour
     ///   OR
     /// Random Cell IF no cell has fewest possible tiles
     /// </returns>
+    /// 
+    // TODO: simplify by adding small variation to each
     public Cell GetCellWithLowestEntropy()
     {
         Cell lowestEntropyCell = null;
