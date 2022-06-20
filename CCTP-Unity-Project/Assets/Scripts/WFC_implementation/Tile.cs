@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WaveFunctionCollapse;
 
+// TODO: convert to scriptableObject
 public class Tile : MonoBehaviour
 {
     public Socket[] sockets = new Socket[4];
@@ -18,6 +19,7 @@ public class Tile : MonoBehaviour
         public List<GameObject> list;
     }
 
+    // TODO: doesnt save after being set
     public List<NeigboursInDirection> neighbourList = new List<NeigboursInDirection>();
 
     public void SetValidTiles()
@@ -37,6 +39,5 @@ public class Tile : MonoBehaviour
             }
             i++;
         }
-
     }
 }
