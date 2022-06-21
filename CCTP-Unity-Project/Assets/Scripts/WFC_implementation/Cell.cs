@@ -106,13 +106,21 @@ public class Cell
     /// <returns> the tile object of this cell </returns>
     public Tile GetTile()
     {
-        if(tile.GetComponent<Tile>() != null)
+        if(tile != null)
         {
-            return tile.GetComponent<Tile>();
+            if (tile.GetComponent<Tile>() != null)
+            {
+                return tile.GetComponent<Tile>();
+            }
+            else
+            {
+                Debug.LogError("No tile component attached to this gameObject");
+                return null;
+            }
         }
         else
         {
-            Debug.LogError("No tile component attached to this gameObject");
+            Debug.LogError("No tile gameObject assigned to this object");
             return null;
         }
     }
