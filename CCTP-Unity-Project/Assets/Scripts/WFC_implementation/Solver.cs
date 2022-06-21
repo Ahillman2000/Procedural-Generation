@@ -36,7 +36,6 @@ public class Solver : MonoBehaviour
     public void Solve()
     {
         numberOfTilesCollapsed = 0;
-
         while (numberOfTilesCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
@@ -49,9 +48,9 @@ public class Solver : MonoBehaviour
     public void Iterate()
     {
         Cell cell = gridGenerator.GetCellWithLowestEntropy();
-        Debug.Log("Cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimension) + " chosen to collapse");
+        Debug.Log("Collapsing cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimension));
         CollapseCell(cell);
-        //Propagate(cell);
+        Propagate(cell);
     }
 
     /// <summary>
@@ -61,8 +60,9 @@ public class Solver : MonoBehaviour
     {
         while (!cellToCollapse.Collapsed)
         {
-            cellToCollapse.RemovePossibleTile(cellToCollapse.SelectRandomPossibleTile());
+            cellToCollapse.RemovePossibleTile(cellToCollapse.SelectRandomPossibleTile()); 
         }
+        Debug.Log("Cell: " + HelperFunctions.ConvertTo2dArray(cellToCollapse.CellIndex, gridGenerator.gridDimension) + " collapsed to " + cellToCollapse.tile);
     }
 
     /// <summary>
@@ -122,6 +122,7 @@ public class Solver : MonoBehaviour
         }
     }*/
 
+    // Todo: remove assumption that tile has been fully collapsed (line 150)
     private void Propagate(Cell cellToPropagate)
     {
         Stack<Cell> stack = new Stack<Cell>();
@@ -130,22 +131,40 @@ public class Solver : MonoBehaviour
         while (stack.Count > 0)
         {
             Cell curentCell = stack.Pop();
+            Debug.Log("propagating out from cell: " + HelperFunctions.ConvertTo2dArray(curentCell.CellIndex, gridGenerator.gridDimension));
 
-            // loops through each valid neighbour
+            // loops through each valid direction
             foreach (ValidNeighbour neighbour in GetValidNeighbours(curentCell))
             {
-                // the cell that will be checked against
-                Cell neighbouringCell = neighbour.cell;
-                // the possible tiles in that cell
-                var tilesToCheckAgainst = neighbouringCell.possibleTiles;
+                // list of possible neighbours for current cell in given direction
+                var possibleNeighbours = curentCell.GetTile().neighbourList[(int)neighbour.conectionDirection].list;
+                // possible tiles in the neighbouring cell
+                var otherPossibleTiles = neighbour.cell.possibleTiles;
 
+                List<GameObject> removals = new List<GameObject>();
 
-                //var validNeighboursForThisCell = curentCell.GetTile().validNeighbouringTiles;
+                // check each possible tile in nieghbouring cell
+                foreach (var otherTile in otherPossibleTiles)
+                {
+                    // if the propagating cell doesnt allow for the potential tile then add to list for removal
+                    if(!possibleNeighbours.Contains(otherTile))
+                    {
+                        removals.Add(otherTile);
+                    }
+                }
 
-                //foreach (var otherTile in tilesToCheckAgainst)
-                //{
-                //    if(otherTile)
-                //}
+                Debug.Log(removals.Count + " tiles to be removed due to invalid connections");
+
+                foreach (var otherTile in removals)
+                {
+                    // remove each invalid tile from neighbours possible tileset
+                    neighbour.cell.RemovePossibleTile(otherTile);
+                    if (!stack.Contains(neighbour.cell))
+                    {
+                        // add this neighbour to stack for next iteration
+                        stack.Push(neighbour.cell);
+                    }
+                }
             }
         }
     }

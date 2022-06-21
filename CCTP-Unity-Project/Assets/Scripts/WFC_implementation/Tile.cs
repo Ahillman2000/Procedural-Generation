@@ -19,7 +19,6 @@ public class Tile : MonoBehaviour
         public List<GameObject> list;
     }
 
-    // TODO: doesnt save after being set
     public List<NeigboursInDirection> neighbourList = new List<NeigboursInDirection>();
 
     public void SetValidTiles()

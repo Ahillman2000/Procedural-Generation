@@ -13,7 +13,8 @@ public class Cell
 
     public bool Collapsed { get; set; } = false;
 
-    [SerializeField] private GameObject tile;
+    // TODO: put this back to private when finished debugging
+    [SerializeField] public GameObject tile;
     readonly GameObject parentObj;
 
     private Solver solver;

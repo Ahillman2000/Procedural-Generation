@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class NeigboursInDirection
+{
+    public List<GameObject> list;
+}
+
 [CreateAssetMenu(fileName = "NewTilePrototype", menuName = "Create New Tile Prototype")]
 public class TilePrototypeSO : ScriptableObject
 {
@@ -12,10 +17,5 @@ public class TilePrototypeSO : ScriptableObject
 
     [SerializeField] private TilePrefabSO tileSet;
 
-    public class NeigboursInDirection
-    {
-        public List<GameObject> list;
-    }
-
-    public List<NeigboursInDirection> neighbourList = new List<NeigboursInDirection>();
+    public List<NeigboursInDirection> validNeighbours = new List<NeigboursInDirection>();
 }

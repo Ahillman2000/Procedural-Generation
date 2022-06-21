@@ -11,7 +11,9 @@ public class TileInspector : Editor
 
         if (GUILayout.Button("Set valid neighbours"))
         {
+            EditorUtility.SetDirty(tile);
             tile.SetValidTiles();
+            PrefabUtility.RecordPrefabInstancePropertyModifications(tile);
         }
     }
 }
