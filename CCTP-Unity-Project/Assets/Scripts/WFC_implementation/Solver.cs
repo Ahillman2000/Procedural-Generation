@@ -48,7 +48,6 @@ public class Solver : MonoBehaviour
     public void Iterate()
     {
         Cell cell = gridGenerator.GetCellWithLowestEntropy();
-        Debug.Log("Collapsing cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimension));
         CollapseCell(cell);
         Propagate(cell);
     }
@@ -62,96 +61,31 @@ public class Solver : MonoBehaviour
         {
             cellToCollapse.RemovePossibleTile(cellToCollapse.SelectRandomPossibleTile()); 
         }
-        Debug.Log("Cell: " + HelperFunctions.ConvertTo2dArray(cellToCollapse.CellIndex, gridGenerator.gridDimension) + " collapsed to " + cellToCollapse.tile);
     }
 
     /// <summary>
     /// Removes any invalid possible tiles from neighbouring tilesets after a cell has been collapsed
     /// </summary>
     /// <param name="cellToPropagate"> The cell to propagate out from </param>
-    /*private void Propagate(Cell cellToPropagate)
-    {
-        Stack<Cell> stack = new Stack<Cell>();
-        stack.Push(cellToPropagate);
-
-        while (stack.Count > 0)
-        {
-            Cell curentCell = stack.Pop();
-            bool addCellToStack = false;
-            foreach (var validNeighbour in GetValidNeighbours(curentCell))
-            {
-                Cell neighbouringCell = validNeighbour.cell;
-
-                foreach (GameObject posibleTile in curentCell.possibleTiles)
-                {
-                    Socket currentSocket = posibleTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
-                    List<GameObject> invalidTiles = new List<GameObject>();
-
-                    foreach (GameObject possibleNeighbouringTile in neighbouringCell.possibleTiles)
-                    {
-                        Socket oppositeSocket = possibleNeighbouringTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection.GetOppositeDirection()];
-
-                        foreach (var neighbour in oppositeSocket.validNeighbours)
-                        {
-                            if (neighbour != currentSocket.value)
-                            {
-                                invalidTiles.Add(possibleNeighbouringTile);
-                            }
-                        }
-                    }
-
-                    if (invalidTiles.Count > 0)
-                    {
-                        foreach (GameObject invalidTile in invalidTiles)
-                        {
-                            validNeighbour.cell.RemovePossibleTile(invalidTile);
-                            addCellToStack = true;
-                        }
-                    }
-                    else
-                    {
-                        // the neighbouring cell cannot be propagated
-                    }
-                }
-
-                if(addCellToStack)
-                {
-                    stack.Push(validNeighbour.cell);
-                }
-            }
-        }
-    }*/
-
-    // Todo: remove assumption that tile has been fully collapsed (line 150)
     private void Propagate(Cell cellToPropagate)
     {
-        Debug.Log("propagating out from cell: " + HelperFunctions.ConvertTo2dArray(cellToPropagate.CellIndex, gridGenerator.gridDimension));
-
-        // loops through each valid direction
         foreach (ValidNeighbour neighbour in GetValidNeighbours(cellToPropagate))
         {
-            // list of possible neighbours for current cell in given direction
             var possibleNeighbours = cellToPropagate.GetTile().neighbourList[(int)neighbour.conectionDirection].list;
-            // possible tiles in the neighbouring cell
             var otherPossibleTiles = neighbour.cell.possibleTiles;
 
             List<GameObject> removals = new List<GameObject>();
 
-            // check each possible tile in nieghbouring cell
             foreach (var otherTile in otherPossibleTiles)
             {
-                // if the propagating cell doesnt allow for the potential tile then add to list for removal
                 if (!possibleNeighbours.Contains(otherTile))
                 {
                     removals.Add(otherTile);
                 }
             }
 
-            Debug.Log(removals.Count + " tiles to be removed due to invalid connections");
-
             foreach (var otherTile in removals)
             {
-                // remove each invalid tile from neighbours possible tileset
                 neighbour.cell.RemovePossibleTile(otherTile);
             }
         }
