@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewTileset", menuName = "New Tile Prefab List")]
-public class TilePrefabSO : ScriptableObject
+public class TilesetSO : ScriptableObject
 {
-    public List<GameObject> tilePrefabs = new List<GameObject>();
+    public List<GameObject> prefabs = new List<GameObject>();
 }

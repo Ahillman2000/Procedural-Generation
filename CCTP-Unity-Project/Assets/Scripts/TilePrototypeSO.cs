@@ -15,7 +15,7 @@ public class TilePrototypeSO : ScriptableObject
     public Vector3 rotation;
     public Socket[] sockets = new Socket[4];
 
-    [SerializeField] private TilePrefabSO tileSet;
+    [SerializeField] private TilesetSO tileSet;
 
     public List<NeigboursInDirection> validNeighbours = new List<NeigboursInDirection>();
 }

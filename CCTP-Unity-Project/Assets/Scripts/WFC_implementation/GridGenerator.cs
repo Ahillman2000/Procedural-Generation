@@ -13,7 +13,7 @@ public class GridGenerator : MonoBehaviour
 
     [SerializeField] private float tileOffset = 5f;
 
-    public List<GameObject> tilePrefabs;
+    public TilesetSO tileset;
     [SerializeField] private GameObject spherePrefab;
     private GameObject debugSphere;
     private List<GameObject> debugSpheres = new List<GameObject>();
@@ -97,7 +97,7 @@ public class GridGenerator : MonoBehaviour
                 Vector3 tilePositionOffset = new Vector3(-gridDimension * tileOffset / 2, 0, -gridDimension * tileOffset / 2);
                 Vector3 tilePosition = tilePositionOffset + new Vector3(row * tileOffset, 0, col * tileOffset) + new Vector3(tileOffset / 2, 0, tileOffset / 2);
 
-                Cell cell = new Cell(map, i, tilePosition, tilePrefabs);
+                Cell cell = new Cell(map, i, tilePosition, tileset.prefabs);
 
                 GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
                 debugSphere.name = "Sphere (" + row + " , " + col + ")";
