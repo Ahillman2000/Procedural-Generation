@@ -31,7 +31,7 @@ public class Solver : MonoBehaviour
     }
 
     /// <summary>
-    /// The main WFC solver algorithm
+    /// The main WFC solver function
     /// </summary>
     public void Solve()
     {
@@ -116,6 +116,11 @@ public class Solver : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines which directions have a valid neighbour next to a given cell
+    /// </summary>
+    /// <param name="cell"> The cell to Check from </param>
+    /// <returns> A list of neighbouring cells and the direction in which they connect</returns>
     private List<ValidNeighbour> GetValidNeighbours(Cell cell)
     {
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
@@ -139,6 +144,9 @@ public class Solver : MonoBehaviour
         return validNeighbours;
     }
 
+    /// <summary>
+    /// Trigger for when a cell collapses, used to keep count of total collapsed cells
+    /// </summary>
     public void OnCellCollapse()
     {
         numberOfTilesCollapsed++;

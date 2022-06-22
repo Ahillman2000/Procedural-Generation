@@ -9,9 +9,7 @@ public class Tile : MonoBehaviour
 {
     public Socket[] sockets = new Socket[4];
 
-    // make tis list into a SO and then drag reference into scripts instead
     [SerializeField] private TilePrefabSO tileSet;
-    //public List<GameObject> validNeighbouringTiles = new List<GameObject>();
 
     [Serializable]
     public class NeigboursInDirection
