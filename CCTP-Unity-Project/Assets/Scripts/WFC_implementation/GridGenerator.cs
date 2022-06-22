@@ -11,7 +11,7 @@ public class GridGenerator : MonoBehaviour
 
     [Range(2, 20)] public int gridDimension = 2;
 
-    [SerializeField] private float tileOffset = 5f;
+    [SerializeField] private float sizeOfTiles = 5f;
 
     public TilesetSO tileset;
     [SerializeField] private GameObject spherePrefab;
@@ -94,8 +94,8 @@ public class GridGenerator : MonoBehaviour
             {
                 int i = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
 
-                Vector3 tilePositionOffset = new Vector3(-gridDimension * tileOffset / 2, 0, -gridDimension * tileOffset / 2);
-                Vector3 tilePosition = tilePositionOffset + new Vector3(row * tileOffset, 0, col * tileOffset) + new Vector3(tileOffset / 2, 0, tileOffset / 2);
+                Vector3 tilePositionOffset = new Vector3(-gridDimension * sizeOfTiles / 2, 0, -gridDimension * sizeOfTiles / 2);
+                Vector3 tilePosition = tilePositionOffset + new Vector3(row * sizeOfTiles, 0, col * sizeOfTiles) + new Vector3(sizeOfTiles / 2, 0, sizeOfTiles / 2);
 
                 Cell cell = new Cell(map, i, tilePosition, tileset.prefabs);
 
@@ -175,8 +175,8 @@ public class GridGenerator : MonoBehaviour
             GameObject tileInstance = Instantiate(possibleTile, cell.position, Quaternion.identity, debugSpheres[cell.CellIndex].transform);
             tileInstance.transform.localScale /= gridDimension;
 
-            Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(i, gridDimension).x * tileOffset * tileInstance.transform.localScale.x, -5, HelperFunctions.ConvertTo2dArray(i, gridDimension).y * tileOffset * tileInstance.transform.localScale.z);
-            Vector3 cellPositionOffset = new Vector3(-tileOffset / 2 * tileInstance.transform.localScale.x, 0, -tileOffset / 2 * tileInstance.transform.localScale.z);
+            Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(i, gridDimension).x * sizeOfTiles * tileInstance.transform.localScale.x, -5, HelperFunctions.ConvertTo2dArray(i, gridDimension).y * sizeOfTiles * tileInstance.transform.localScale.z);
+            Vector3 cellPositionOffset = new Vector3(-sizeOfTiles / 2 * tileInstance.transform.localScale.x, 0, -sizeOfTiles / 2 * tileInstance.transform.localScale.z);
 
             tileInstance.transform.localPosition = cellPosition + cellPositionOffset;
             i++;

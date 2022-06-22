@@ -37,4 +37,12 @@ public class Tile : MonoBehaviour
             i++;
         }
     }
+
+    private void Reset()
+    {
+        for (int i = 0; i < sockets.Length; i++)
+        {
+            sockets[i] = new Socket((Direction)i, 0);
+        }
+    }
 }

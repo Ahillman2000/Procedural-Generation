@@ -1,13 +1,19 @@
 using WaveFunctionCollapse;
 using System;
+using UnityEngine;
 
 /// <summary>
 /// Socket related info - direction of the socket, the stored tile, the neighbours that can match this socket
 /// </summary>
 [Serializable]
-public struct Socket
+public class Socket
 {
-    public Direction direction;
+    /*[UnityEngine.HideInInspector]*/ public Direction direction;
     public TileValue value;
-    //public List<TileValue> validNeighbours;
+
+    public Socket(Direction direction, TileValue value)
+    {
+        this.direction = direction;
+        this.value = value;
+    }
 }
