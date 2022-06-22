@@ -36,13 +36,13 @@ public class Cell
     }
 
     /// <summary>
-    /// Sets the cells tile, called when collapsed to a single possible tile value. Also creates an object of that tile
+    /// Selects a random tile from a give list of objects
     /// </summary>
-    /// <param name="tile"> The tile value to be set to </param>
-    public void SetTile(GameObject tile)
+    /// <param name="tiles"> The list of objects to iterate through </param>
+    /// <returns> The randomly selected tile </returns>
+    public GameObject SelectRandomPossibleTile()
     {
-        this.tile = tile;
-        GameObject.Instantiate(tile, position, Quaternion.identity, parentObj.transform);
+        return possibleTiles[UnityEngine.Random.Range(0, possibleTiles.Count)];
     }
 
     /// <summary>
@@ -62,6 +62,16 @@ public class Cell
                 solver.OnCellCollapse();
             }
         }
+    }
+
+    /// <summary>
+    /// Sets the cells tile, called when collapsed to a single possible tile value. Also creates an object of that tile
+    /// </summary>
+    /// <param name="tile"> The tile value to be set to </param>
+    public void SetTile(GameObject tile)
+    {
+        this.tile = tile;
+        GameObject.Instantiate(tile, position, Quaternion.identity, parentObj.transform);
     }
 
     /// <summary>
@@ -93,12 +103,24 @@ public class Cell
     /// Get the tile
     /// </summary>
     /// <returns> the tile object of this cell </returns>
-    public GameObject GetTile()
+    public Tile GetTile()
     {
         if(tile != null)
         {
-            return tile;
+            if (tile.GetComponent<Tile>() != null)
+            {
+                return tile.GetComponent<Tile>();
+            }
+            else
+            {
+                Debug.LogError("No tile component attached to this gameObject");
+                return null;
+            }
         }
-        return null;
+        else
+        {
+            Debug.LogError("No tile gameObject assigned to this object");
+            return null;
+        }
     }
 }

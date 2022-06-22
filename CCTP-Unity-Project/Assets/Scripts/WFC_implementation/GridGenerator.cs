@@ -36,16 +36,6 @@ public class GridGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Selects a random tile from a give list of objects
-    /// </summary>
-    /// <param name="tiles"> The list of objects to iterate through </param>
-    /// <returns> The randomly selected tile </returns>
-    public GameObject SelectRandomTile(List<GameObject> tiles)
-    {
-        return tiles[UnityEngine.Random.Range(0, tiles.Count)];
-    }
-
-    /// <summary>
     /// Selects a random Cell from a give list of cells
     /// </summary>
     /// <param name="cells"> The list of cells to iterate through </param>
@@ -126,6 +116,8 @@ public class GridGenerator : MonoBehaviour
     ///   OR
     /// Random Cell IF no cell has fewest possible tiles
     /// </returns>
+    /// 
+    // TODO: simplify by adding small variation to each
     public Cell GetCellWithLowestEntropy()
     {
         Cell lowestEntropyCell = null;
@@ -191,8 +183,9 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
+    /*
     //TODO: extract out into own script
-    /*public void ManuallyAssignTileToCell()
+    public void ManuallyAssignTileToCell()
     {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -204,13 +197,16 @@ public class GridGenerator : MonoBehaviour
 
             Vector3 hitCellPos = HitToCellPos(hitPosition, tileOffset);
             Vector2Int hitCellCoords2D = new Vector2Int((int)(hitCellPos.x + tileOffset), (int)(hitCellPos.z + tileOffset));
-            int hitCellIndex = (int)(HelperFunctions.ConvertTo1dArray(hitCellCoords2D.x, hitCellCoords2D.y, gridDimensionSquared) / tileOffset);
+            int hitCellIndex = (int)(HelperFunctions.ConvertTo1dArray(hitCellCoords2D.x, hitCellCoords2D.y, gridDimension) / tileOffset);
 
             if (hitObject.transform.parent != null && hitObject.transform.parent.GetComponent<Tile>() != null)
             {
                 Debug.Log("Hit " + hitObject.transform.parent.gameObject);
                 Debug.Log("Hit tile belonging to cell: " + hitCellIndex);
                 //grid[hitCellIndex].SetTile(hitObject.transform.parent.gameObject);
+
+                // can only be used in editor
+                PrefabUtility.GetCorrespondingObjectFromOriginalSource(hitObject);
             }
         }
     }
@@ -228,5 +224,6 @@ public class GridGenerator : MonoBehaviour
         float z = Mathf.Round(input.z / factor) * factor;
 
         return new Vector3(x, y, z);
-    }*/
+    }
+    */
 }

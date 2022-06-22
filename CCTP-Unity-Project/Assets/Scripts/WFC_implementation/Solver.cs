@@ -31,12 +31,11 @@ public class Solver : MonoBehaviour
     }
 
     /// <summary>
-    /// The main WFC solver algorithm
+    /// The main WFC solver function
     /// </summary>
     public void Solve()
     {
         numberOfTilesCollapsed = 0;
-
         while (numberOfTilesCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
@@ -49,7 +48,6 @@ public class Solver : MonoBehaviour
     public void Iterate()
     {
         Cell cell = gridGenerator.GetCellWithLowestEntropy();
-        Debug.Log("Cell: " + HelperFunctions.ConvertTo2dArray(cell.CellIndex, gridGenerator.gridDimension) + " chosen to collapse");
         CollapseCell(cell);
         Propagate(cell);
     }
@@ -61,7 +59,7 @@ public class Solver : MonoBehaviour
     {
         while (!cellToCollapse.Collapsed)
         {
-            cellToCollapse.RemovePossibleTile(gridGenerator.SelectRandomTile(gridGenerator.tilePrefabs));
+            cellToCollapse.RemovePossibleTile(cellToCollapse.SelectRandomPossibleTile()); 
         }
     }
 
@@ -71,55 +69,24 @@ public class Solver : MonoBehaviour
     /// <param name="cellToPropagate"> The cell to propagate out from </param>
     private void Propagate(Cell cellToPropagate)
     {
-        Stack<Cell> stack = new Stack<Cell>();
-        stack.Push(cellToPropagate);
-
-        while (stack.Count > 0)
+        foreach (ValidNeighbour neighbour in GetValidNeighbours(cellToPropagate))
         {
-            Cell curentCell = stack.Pop();
-            bool addCellToStack = false;
-            foreach (var validNeighbour in GetValidNeighbours(curentCell))
+            var possibleNeighbours = cellToPropagate.GetTile().neighbourList[(int)neighbour.conectionDirection].list;
+            var otherPossibleTiles = neighbour.cell.possibleTiles;
+
+            List<GameObject> removals = new List<GameObject>();
+
+            foreach (var otherTile in otherPossibleTiles)
             {
-                Cell neighbouringCell = validNeighbour.cell;
-
-                foreach (GameObject posibleTile in curentCell.possibleTiles)
+                if (!possibleNeighbours.Contains(otherTile))
                 {
-                    Socket currentSocket = posibleTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection];
-                    List<GameObject> invalidTiles = new List<GameObject>();
-
-                    foreach (GameObject possibleNeighbouringTile in neighbouringCell.possibleTiles)
-                    {
-                        Socket oppositeSocket = possibleNeighbouringTile.GetComponent<Tile>().sockets[(int)validNeighbour.conectionDirection.GetOppositeDirection()];
-
-                        foreach (var neighbour in oppositeSocket.validNeighbours)
-                        {
-                            if (neighbour != currentSocket.value)
-                            {
-                                invalidTiles.Add(possibleNeighbouringTile);
-                            }
-                        }
-                    }
-
-                    if (invalidTiles.Count > 0)
-                    {
-                        foreach (GameObject invalidTile in invalidTiles)
-                        {
-                            validNeighbour.cell.RemovePossibleTile(invalidTile);
-                            addCellToStack = true;
-                            //stack.Push(validNeighbour.cell);
-                            Debug.Log("cell: " + HelperFunctions.ConvertTo2dArray(curentCell.CellIndex, gridGenerator.gridDimension) + " had tile: " + invalidTile.name + " removed");
-                        }
-                    }
-                    else
-                    {
-                        // the neighbouring cell cannot be propagated
-                    }
+                    removals.Add(otherTile);
                 }
+            }
 
-                if(addCellToStack)
-                {
-                    stack.Push(validNeighbour.cell);
-                }
+            foreach (var otherTile in removals)
+            {
+                neighbour.cell.RemovePossibleTile(otherTile);
             }
         }
     }
@@ -149,6 +116,11 @@ public class Solver : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines which directions have a valid neighbour next to a given cell
+    /// </summary>
+    /// <param name="cell"> The cell to Check from </param>
+    /// <returns> A list of neighbouring cells and the direction in which they connect</returns>
     private List<ValidNeighbour> GetValidNeighbours(Cell cell)
     {
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
@@ -172,6 +144,9 @@ public class Solver : MonoBehaviour
         return validNeighbours;
     }
 
+    /// <summary>
+    /// Trigger for when a cell collapses, used to keep count of total collapsed cells
+    /// </summary>
     public void OnCellCollapse()
     {
         numberOfTilesCollapsed++;
