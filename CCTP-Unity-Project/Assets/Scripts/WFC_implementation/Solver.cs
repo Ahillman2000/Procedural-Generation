@@ -71,7 +71,7 @@ public class Solver : MonoBehaviour
     {
         foreach (ValidNeighbour neighbour in GetValidNeighbours(cellToPropagate))
         {
-            var possibleNeighbours = cellToPropagate.GetTile().neighbourList[(int)neighbour.conectionDirection].list;
+            var possibleNeighbours = cellToPropagate.GetTile().neighbourList[(int)neighbour.conectionDirection].neighbours;
             var otherPossibleTiles = neighbour.cell.possibleTiles;
 
             List<GameObject> removals = new List<GameObject>();

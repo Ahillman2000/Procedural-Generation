@@ -16,16 +16,6 @@ namespace WaveFunctionCollapse
     }
 
     /// <summary>
-    /// Possible edge tile values for sockets
-    /// </summary>
-    public enum TileValue
-    {
-        Grass,
-        PathVertical,
-        PathHorizontal,
-    }
-
-    /// <summary>
     /// Function to get the inverse of a given direction
     /// </summary>
     public static class DirectionHelper
