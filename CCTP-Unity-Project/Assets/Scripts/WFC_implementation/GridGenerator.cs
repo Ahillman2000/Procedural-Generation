@@ -22,18 +22,16 @@ public class GridGenerator : MonoBehaviour
 
     private GameObject map;
 
-    void Start()
+    /*private static GridGenerator instance = null;
+    public static GridGenerator Instance
     {
-
-    }
-
-    void Update()
-    {
-        /*if (Input.GetMouseButtonDown(0))
+        get
         {
-            ManuallyAssignTileToCell();
-        }*/
-    }
+            if (instance == null)
+                instance = (GridGenerator)FindObjectOfType(typeof(GridGenerator));
+            return instance;
+        }
+    }*/
 
     /// <summary>
     /// Selects a random Cell from a give list of cells

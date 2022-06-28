@@ -8,8 +8,20 @@ using WaveFunctionCollapse;
 public class Solver : MonoBehaviour
 {
     [SerializeField] private GridGenerator gridGenerator;
+    //private GridGenerator gridGenerator = GridGenerator.Instance;
 
     private int numberOfTilesCollapsed;
+
+    /*private static Solver instance = null;
+    public static Solver Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = (Solver)FindObjectOfType(typeof(Solver));
+            return instance;
+        }
+    }*/
 
     void Start()
     {

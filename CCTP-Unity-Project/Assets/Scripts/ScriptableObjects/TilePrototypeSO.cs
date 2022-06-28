@@ -12,7 +12,8 @@ public class TilePrototypeSO : ScriptableObject
 {
     public new string name;
     public Mesh meshData;
-    public Vector3 rotation;
+    [Range(0,3)]
+    public int rotation;
     public Socket[] sockets = new Socket[4];
 
     [SerializeField] private TilesetSO tileSet;

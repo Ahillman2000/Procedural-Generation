@@ -18,6 +18,9 @@ public class Tile : MonoBehaviour
 
     public List<NeigboursInDirection> neighbourList;
 
+    /// <summary>
+    /// sets valid tiles for each directional socket
+    /// </summary>
     public void SetValidTiles()
     {
         int i = 0;
@@ -37,6 +40,9 @@ public class Tile : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// runs when the script is added as component, sets socket values and neighour list to default
+    /// </summary>
     private void Reset()
     {
         for (int i = 0; i < sockets.Length; i++)

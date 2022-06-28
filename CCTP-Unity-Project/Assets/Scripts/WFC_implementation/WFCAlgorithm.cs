@@ -20,5 +20,8 @@ public class WFCAlgorithm : MonoBehaviour
     {
         gridGenerator.GenerateGrid();
         solver.Solve();
+
+        //GridGenerator.Instance.GenerateGrid();
+        //Solver.Instance.Solve();
     }
 }
