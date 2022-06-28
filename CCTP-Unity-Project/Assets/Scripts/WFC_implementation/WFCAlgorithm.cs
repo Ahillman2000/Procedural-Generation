@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class WFCAlgorithm : MonoBehaviour
 {
-    [SerializeField] private GridGenerator gridGenerator;
-    [SerializeField] private Solver solver;
+    //[SerializeField] private GridGenerator gridGenerator;
+    //[SerializeField] private Solver solver;
+    //[SerializeField] private CameraHeight camHeight;
+
+    [SerializeField] private CameraHeight camHeight;
 
     public void Start()
     {
-        Execute();
+        //Execute();
     }
 
     /// <summary>
@@ -18,8 +21,9 @@ public class WFCAlgorithm : MonoBehaviour
     /// </summary>
     public void Execute()
     {
-        gridGenerator.GenerateGrid();
-        solver.Solve();
+        GridGenerator.Instance.GenerateGrid();
+        Solver.Instance.Solve();
+        camHeight.SetCameraHeight();
 
         //GridGenerator.Instance.GenerateGrid();
         //Solver.Instance.Solve();

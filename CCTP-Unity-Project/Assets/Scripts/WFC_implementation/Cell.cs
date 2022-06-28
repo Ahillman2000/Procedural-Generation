@@ -32,8 +32,8 @@ public class Cell
         this.possibleTiles = new List<GameObject>(possibleTiles);
         this.parentObj = parentObj;
 
-        solver = GameObject.Find("Wave Function Collapse").GetComponent<Solver>();
-        //solver = Solver.Instance;
+        //solver = GameObject.Find("Wave Function Collapse").GetComponent<Solver>();
+        solver = Solver.Instance;
     }
 
     /// <summary>

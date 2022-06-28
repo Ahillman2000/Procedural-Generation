@@ -22,16 +22,15 @@ public class GridGenerator : MonoBehaviour
 
     private GameObject map;
 
-    /*private static GridGenerator instance = null;
-    public static GridGenerator Instance
+    public static GridGenerator Instance { get; set; } = null;
+
+    private void Awake()
     {
-        get
-        {
-            if (instance == null)
-                instance = (GridGenerator)FindObjectOfType(typeof(GridGenerator));
-            return instance;
-        }
-    }*/
+        if (Instance == null)
+            Instance = (GridGenerator)FindObjectOfType(typeof(GridGenerator));
+        else
+            Instance = this;
+    }
 
     /// <summary>
     /// Selects a random Cell from a give list of cells

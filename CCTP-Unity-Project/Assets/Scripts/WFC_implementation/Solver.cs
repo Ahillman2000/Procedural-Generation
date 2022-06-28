@@ -7,25 +7,24 @@ using WaveFunctionCollapse;
 
 public class Solver : MonoBehaviour
 {
-    [SerializeField] private GridGenerator gridGenerator;
-    //private GridGenerator gridGenerator = GridGenerator.Instance;
+    //[SerializeField] private GridGenerator gridGenerator;
+    private GridGenerator gridGenerator;
 
     private int numberOfTilesCollapsed;
 
-    /*private static Solver instance = null;
-    public static Solver Instance
+    public static Solver Instance { get; set; } = null;
+
+    private void Awake()
     {
-        get
-        {
-            if (instance == null)
-                instance = (Solver)FindObjectOfType(typeof(Solver));
-            return instance;
-        }
-    }*/
+        if (Instance == null)
+            Instance = (Solver)FindObjectOfType(typeof(Solver));
+        else
+            Instance = this;
+    }
 
     void Start()
     {
-        
+        gridGenerator = GridGenerator.Instance;
     }
 
     void Update()
