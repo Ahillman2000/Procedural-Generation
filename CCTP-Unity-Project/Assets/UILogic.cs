@@ -1,27 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class UILogic : MonoBehaviour
 {
+    [SerializeField] private Slider gridDimensionSlider;
+    [SerializeField] private TMP_Text gridDimensionText;
+
+    private void Start()
+    {
+        gridDimensionSlider.value = GridGenerator.Instance.gridDimension;
+        gridDimensionText.text = GridGenerator.Instance.gridDimension.ToString();
+    }
+
     public void OnGenerateGridPressed()
     {
-        // GridGenerator.GenerateGrid();
+        GridGenerator.Instance.GenerateGrid();
     }
 
     public void OnSingleSolverIterationPressed()
     {
-        // Solver.Iterate();
+        Solver.Instance.Iterate();
     }
 
     public void OnSolvePressed()
     {
-        //WFC.Execute();
+        WFCAlgorithm.Instance.Execute();
     }
 
-    public void OnGridSizeSliderValueChanged()
+    public void OnGridDimenionChanged(float value)
     {
-        // update GridGenerator.GridDimension
-        // update UI element
+        GridGenerator.Instance.gridDimension = (int)value;
+        gridDimensionText.text = GridGenerator.Instance.gridDimension.ToString();
     }
 }

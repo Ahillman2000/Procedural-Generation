@@ -5,15 +5,20 @@ using UnityEngine;
 
 public class WFCAlgorithm : MonoBehaviour
 {
-    //[SerializeField] private GridGenerator gridGenerator;
-    //[SerializeField] private Solver solver;
-    //[SerializeField] private CameraHeight camHeight;
-
     [SerializeField] private CameraHeight camHeight;
+
+    public static WFCAlgorithm Instance { get; set; } = null;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = (WFCAlgorithm)FindObjectOfType(typeof(WFCAlgorithm));
+        else
+            Instance = this;
+    }
 
     public void Start()
     {
-        //Execute();
     }
 
     /// <summary>
@@ -24,8 +29,5 @@ public class WFCAlgorithm : MonoBehaviour
         GridGenerator.Instance.GenerateGrid();
         Solver.Instance.Solve();
         camHeight.SetCameraHeight();
-
-        //GridGenerator.Instance.GenerateGrid();
-        //Solver.Instance.Solve();
     }
 }
