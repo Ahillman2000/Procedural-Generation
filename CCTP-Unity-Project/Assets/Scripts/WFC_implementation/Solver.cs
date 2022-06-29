@@ -8,28 +8,16 @@ using WaveFunctionCollapse;
 public class Solver : MonoBehaviour
 {
     //[SerializeField] private GridGenerator gridGenerator;
-    private GridGenerator gridGenerator;
+    [SerializeField] private GridGenerator gridGenerator;
 
-    private int numberOfTilesCollapsed;
-
-    public static Solver Instance { get; set; } = null;
-
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = (Solver)FindObjectOfType(typeof(Solver));
-        else
-            Instance = this;
-    }
+    private int numberOfTilesCollapsed = 0;
 
     void Start()
     {
-        gridGenerator = GridGenerator.Instance;
     }
 
     void Update()
     {
-
     }
 
     /// <summary>
@@ -44,12 +32,13 @@ public class Solver : MonoBehaviour
     /// <summary>
     /// The main WFC solver function
     /// </summary>
-    public void Solve()
+    public IEnumerator Solve()
     {
         numberOfTilesCollapsed = 0;
         while (numberOfTilesCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
+            yield return new WaitForSeconds(0.3f);
         }
     }
 

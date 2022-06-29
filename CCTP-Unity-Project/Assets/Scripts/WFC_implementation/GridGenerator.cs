@@ -22,16 +22,6 @@ public class GridGenerator : MonoBehaviour
 
     private GameObject map;
 
-    public static GridGenerator Instance { get; set; } = null;
-
-    private void Awake()
-    {
-        if (Instance == null)
-            Instance = (GridGenerator)FindObjectOfType(typeof(GridGenerator));
-        else
-            Instance = this;
-    }
-
     /// <summary>
     /// Selects a random Cell from a give list of cells
     /// </summary>
@@ -54,10 +44,12 @@ public class GridGenerator : MonoBehaviour
         Vector3 camPos = cam.transform.position;
         cam.transform.position = new Vector3(camPos.x, gridDimension * 7, camPos.z);
 
-        /*foreach (Cell cell in grid)
+        //ShowPossibleTilesetinCell(grid[0]);
+
+        foreach (Cell cell in grid)
         {
             ShowPossibleTilesetinCell(cell);
-        }*/
+        }
     }
 
     /// <summary>
@@ -157,6 +149,44 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
+    static bool IsPerfectSquare(int n)
+    {
+
+        // Find floating point value of
+        // square root of x.
+        if (n >= 0)
+        {
+            int root = (int)Math.Sqrt(n);
+
+            // if product of square root
+            // is equal, then
+            // return T/F
+            return (root * root == n);
+        }
+        // else return false if n<0
+        return false;
+    }
+
+    private int GetNextPerfectSquare(int n)
+    {
+        double root = Math.Sqrt(n);
+        int nextN = (int)Math.Floor(root) + 1;
+        int nextPerfectSquare = (int)Math.Pow(nextN, 2);
+        return nextPerfectSquare;
+    }
+
+    private int GetPerfectSquare(int n)
+    {
+        if(IsPerfectSquare(n))
+        {
+            return n;
+        }
+        else
+        {
+            return GetNextPerfectSquare(n);
+        }
+    }
+
     /// <summary>
     /// instantiates the posibles tiles as gameobjects around the cell
     /// </summary>
@@ -164,19 +194,35 @@ public class GridGenerator : MonoBehaviour
     public void ShowPossibleTilesetinCell(Cell cell)
     {
         int numberOfCells = cell.possibleTiles.Count;
-        int gridDimension = (int)Mathf.Sqrt(numberOfCells);
-        int i = 0;
+        int gridDimension = (int)Mathf.Sqrt(GetPerfectSquare(numberOfCells));
+        float sizeOfPossibleTiles = sizeOfTiles / GetPerfectSquare(numberOfCells);
 
-        foreach (GameObject possibleTile in cell.possibleTiles)
+        for (int row = 0; row < gridDimension; row++)
         {
-            GameObject tileInstance = Instantiate(possibleTile, cell.position, Quaternion.identity, debugSpheres[cell.CellIndex].transform);
-            tileInstance.transform.localScale /= gridDimension;
+            for (int col = 0; col < gridDimension; col++)
+            {
+                Vector3 tilePositionOffset = new Vector3(-gridDimension * sizeOfPossibleTiles / 2, 0, -gridDimension * sizeOfPossibleTiles / 2);
+                Vector3 tilePosition = cell.position + tilePositionOffset + new Vector3(row * sizeOfPossibleTiles, 0, col * sizeOfPossibleTiles) + new Vector3(sizeOfPossibleTiles / 2, 0, sizeOfPossibleTiles / 2);
 
-            Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(i, gridDimension).x * sizeOfTiles * tileInstance.transform.localScale.x, -5, HelperFunctions.ConvertTo2dArray(i, gridDimension).y * sizeOfTiles * tileInstance.transform.localScale.z);
-            Vector3 cellPositionOffset = new Vector3(-sizeOfTiles / 2 * tileInstance.transform.localScale.x, 0, -sizeOfTiles / 2 * tileInstance.transform.localScale.z);
+                GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
+                debugSphere.transform.parent = debugSpheres[cell.CellIndex].transform;
+                debugSphere.name = "Sphere (" + row + " , " + col + ")";
 
-            tileInstance.transform.localPosition = cellPosition + cellPositionOffset;
-            i++;
+                /*int index = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
+                if (index < numberOfCells)
+                {
+                    GameObject tileInstance = Instantiate(cell.possibleTiles[index], tilePosition, Quaternion.identity);
+                    tileInstance.transform.parent = debugSpheres[cell.CellIndex].transform;
+                    tileInstance.transform.localScale /= sizeOfPossibleTiles;
+                    //debugSphere.name = "Sphere (" + row + " , " + col + ")";
+                }
+                else
+                {
+                    GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
+                    debugSphere.transform.parent = debugSpheres[cell.CellIndex].transform;
+                    debugSphere.name = "Sphere (" + row + " , " + col + ")";
+                }*/
+            }
         }
     }
 

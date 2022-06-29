@@ -4,33 +4,37 @@ using TMPro;
 
 public class UILogic : MonoBehaviour
 {
+    [SerializeField] private GridGenerator gridGenerator;
+    [SerializeField] private Solver solver;
+    [SerializeField] private WFCAlgorithm wFCAlgorithm;
+
     [SerializeField] private Slider gridDimensionSlider;
     [SerializeField] private TMP_Text gridDimensionText;
 
     private void Start()
     {
-        gridDimensionSlider.value = GridGenerator.Instance.gridDimension;
-        gridDimensionText.text = GridGenerator.Instance.gridDimension.ToString();
+        gridDimensionSlider.value = gridGenerator.gridDimension;
+        gridDimensionText.text    = gridGenerator.gridDimension.ToString();
     }
 
     public void OnGenerateGridPressed()
     {
-        GridGenerator.Instance.GenerateGrid();
+        gridGenerator.GenerateGrid();
     }
 
     public void OnSingleSolverIterationPressed()
     {
-        Solver.Instance.Iterate();
+        solver.Iterate();
     }
 
     public void OnSolvePressed()
     {
-        WFCAlgorithm.Instance.Execute();
+        wFCAlgorithm.Execute();
     }
 
     public void OnGridDimenionChanged(float value)
     {
-        GridGenerator.Instance.gridDimension = (int)value;
-        gridDimensionText.text = GridGenerator.Instance.gridDimension.ToString();
+        gridGenerator.gridDimension = (int)value;
+        gridDimensionText.text = gridGenerator.gridDimension.ToString();
     }
 }

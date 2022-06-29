@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class CameraHeight : MonoBehaviour
 {
+    [SerializeField] GridGenerator gridGenerator;
     public void SetCameraHeight()
     {
-        this.transform.position = new Vector3(0f, GridGenerator.Instance.gridDimension * 30, 0f);
+        this.transform.position = new Vector3(0f, gridGenerator.gridDimension * 30, 0f);
     }
 }

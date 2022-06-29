@@ -3,25 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-/*[CustomEditor(typeof(WFCTestScript))]
-public class WFCInspector : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        WFCTestScript WFC = (WFCTestScript)target;
-        if(GUILayout.Button("Create Tilemap"))
-        {
-            WFC.CreateWaveFunctionCollapse();
-            WFC.CreateTilemap();
-        }
-        if(GUILayout.Button("Save Tilemap"))
-        {
-            WFC.SaveTileMap();
-        }
-    }
-}*/
-
 [CustomEditor(typeof(Solver))]
 public class SolverInspector : Editor
 {
@@ -34,6 +15,7 @@ public class SolverInspector : Editor
         {
             solver.Iterate();
         }
+        // TODO: UNLIKELY TO WORK due to coroutine in editor
         if (GUILayout.Button("Solve"))
         {
             solver.Solve();
