@@ -14,6 +14,9 @@ public class Solver : MonoBehaviour
 
     public static Solver Instance { get; set; } = null;
 
+    [Range(0f,1f)]
+    public float delay = 0f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -44,12 +47,13 @@ public class Solver : MonoBehaviour
     /// <summary>
     /// The main WFC solver function
     /// </summary>
-    public void Solve()
+    public IEnumerator Solve()
     {
         numberOfTilesCollapsed = 0;
         while (numberOfTilesCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
+            yield return new WaitForSeconds(delay);
         }
     }
 

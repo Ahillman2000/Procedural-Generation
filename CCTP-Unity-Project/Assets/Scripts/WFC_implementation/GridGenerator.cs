@@ -179,48 +179,4 @@ public class GridGenerator : MonoBehaviour
             i++;
         }
     }
-
-    /*
-    //TODO: extract out into own script
-    public void ManuallyAssignTileToCell()
-    {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            Vector3 hitPosition = hit.point;
-            GameObject hitObject = hit.transform.gameObject;
-
-            Vector3 hitCellPos = HitToCellPos(hitPosition, tileOffset);
-            Vector2Int hitCellCoords2D = new Vector2Int((int)(hitCellPos.x + tileOffset), (int)(hitCellPos.z + tileOffset));
-            int hitCellIndex = (int)(HelperFunctions.ConvertTo1dArray(hitCellCoords2D.x, hitCellCoords2D.y, gridDimension) / tileOffset);
-
-            if (hitObject.transform.parent != null && hitObject.transform.parent.GetComponent<Tile>() != null)
-            {
-                Debug.Log("Hit " + hitObject.transform.parent.gameObject);
-                Debug.Log("Hit tile belonging to cell: " + hitCellIndex);
-                //grid[hitCellIndex].SetTile(hitObject.transform.parent.gameObject);
-
-                // can only be used in editor
-                PrefabUtility.GetCorrespondingObjectFromOriginalSource(hitObject);
-            }
-        }
-    }
-
-    /// <summary>
-    /// https://www.reddit.com/r/Unity3D/comments/38bvns/round_to_even_number_or_nearest_5_in_c/
-    /// </summary>
-    public Vector3 HitToCellPos(Vector3 input, float factor)
-    {
-        if (factor <= 0f)
-            throw new UnityException("factor argument must be above 0");
-
-        float x = Mathf.Round(input.x / factor) * factor;
-        float y = Mathf.Round(input.y / factor) * factor;
-        float z = Mathf.Round(input.z / factor) * factor;
-
-        return new Vector3(x, y, z);
-    }
-    */
 }

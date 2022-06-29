@@ -27,7 +27,7 @@ public class WFCAlgorithm : MonoBehaviour
     public void Execute()
     {
         GridGenerator.Instance.GenerateGrid();
-        Solver.Instance.Solve();
+        StartCoroutine(Solver.Instance.Solve());
         camHeight.SetCameraHeight();
     }
 }
