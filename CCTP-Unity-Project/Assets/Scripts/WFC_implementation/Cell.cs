@@ -10,6 +10,7 @@ public class Cell
     public int CellIndex { get; set; } = 0;
     public Vector3 position = Vector3.zero;
     public List<GameObject> possibleTiles;
+    public List<GameObject> possibleTileInstances;
 
     public bool Collapsed { get; set; } = false;
 

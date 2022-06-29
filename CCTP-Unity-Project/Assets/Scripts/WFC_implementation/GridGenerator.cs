@@ -195,25 +195,23 @@ public class GridGenerator : MonoBehaviour
     {
         int numberOfCells = cell.possibleTiles.Count;
         int gridDimension = (int)Mathf.Sqrt(GetPerfectSquare(numberOfCells));
-        float sizeOfPossibleTiles = sizeOfTiles / GetPerfectSquare(numberOfCells);
 
         for (int row = 0; row < gridDimension; row++)
         {
             for (int col = 0; col < gridDimension; col++)
             {
-                Vector3 tilePositionOffset = new Vector3(-gridDimension * sizeOfPossibleTiles / 2, 0, -gridDimension * sizeOfPossibleTiles / 2);
-                Vector3 tilePosition = cell.position + tilePositionOffset + new Vector3(row * sizeOfPossibleTiles, 0, col * sizeOfPossibleTiles) + new Vector3(sizeOfPossibleTiles / 2, 0, sizeOfPossibleTiles / 2);
+                Vector3 tilePositionOffset = new Vector3(-gridDimension * gridDimension / 2, 0, -gridDimension * gridDimension / 2);
+                Vector3 tilePositioning = new Vector3(row * gridDimension, 0, col * gridDimension) + new Vector3(gridDimension / 2, 0, gridDimension / 2);
+                Vector3 tilePosition = cell.position + tilePositionOffset + tilePositioning;
 
-                GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
-                debugSphere.transform.parent = debugSpheres[cell.CellIndex].transform;
-                debugSphere.name = "Sphere (" + row + " , " + col + ")";
-
-                /*int index = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
+                int index = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
                 if (index < numberOfCells)
                 {
                     GameObject tileInstance = Instantiate(cell.possibleTiles[index], tilePosition, Quaternion.identity);
                     tileInstance.transform.parent = debugSpheres[cell.CellIndex].transform;
-                    tileInstance.transform.localScale /= sizeOfPossibleTiles;
+                    tileInstance.transform.localScale /= GetPerfectSquare(numberOfCells)/2;
+                    tileInstance.AddComponent<PossibleTileInstance>();
+                    tileInstance.GetComponent<PossibleTileInstance>().prefab = cell.possibleTiles[index];
                     //debugSphere.name = "Sphere (" + row + " , " + col + ")";
                 }
                 else
@@ -221,7 +219,7 @@ public class GridGenerator : MonoBehaviour
                     GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
                     debugSphere.transform.parent = debugSpheres[cell.CellIndex].transform;
                     debugSphere.name = "Sphere (" + row + " , " + col + ")";
-                }*/
+                }
             }
         }
     }
