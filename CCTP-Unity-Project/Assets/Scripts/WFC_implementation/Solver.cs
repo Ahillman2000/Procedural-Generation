@@ -7,13 +7,24 @@ using WaveFunctionCollapse;
 
 public class Solver : MonoBehaviour
 {
-    [SerializeField] private GridGenerator gridGenerator;
+    //[SerializeField] private GridGenerator gridGenerator;
+    private GridGenerator gridGenerator;
 
     private int numberOfTilesCollapsed;
 
+    public static Solver Instance { get; set; } = null;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = (Solver)FindObjectOfType(typeof(Solver));
+        else
+            Instance = this;
+    }
+
     void Start()
     {
-        
+        gridGenerator = GridGenerator.Instance;
     }
 
     void Update()
@@ -71,7 +82,7 @@ public class Solver : MonoBehaviour
     {
         foreach (ValidNeighbour neighbour in GetValidNeighbours(cellToPropagate))
         {
-            var possibleNeighbours = cellToPropagate.GetTile().neighbourList[(int)neighbour.conectionDirection].list;
+            var possibleNeighbours = cellToPropagate.GetTile().neighbourList[(int)neighbour.conectionDirection].neighbours;
             var otherPossibleTiles = neighbour.cell.possibleTiles;
 
             List<GameObject> removals = new List<GameObject>();

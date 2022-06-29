@@ -22,17 +22,14 @@ public class GridGenerator : MonoBehaviour
 
     private GameObject map;
 
-    void Start()
-    {
+    public static GridGenerator Instance { get; set; } = null;
 
-    }
-
-    void Update()
+    private void Awake()
     {
-        /*if (Input.GetMouseButtonDown(0))
-        {
-            ManuallyAssignTileToCell();
-        }*/
+        if (Instance == null)
+            Instance = (GridGenerator)FindObjectOfType(typeof(GridGenerator));
+        else
+            Instance = this;
     }
 
     /// <summary>

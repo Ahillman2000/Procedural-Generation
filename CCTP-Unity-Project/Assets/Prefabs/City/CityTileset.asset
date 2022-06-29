@@ -12,4 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f92d65550b76294c82a04e1efea124b, type: 3}
   m_Name: CityTileset
   m_EditorClassIdentifier: 
-  prefabs: []
+  prefabs:
+  - {fileID: 5298349355509281619, guid: f354ae880e9f9f34cb3dfac7ee86d780, type: 3}
+  - {fileID: 5185991957638343509, guid: 7f7e1082a5497cd48bf9849ad1ecd17d, type: 3}
+  - {fileID: 190149117704758206, guid: cc274d2b0e4046844825ca671dd4caa0, type: 3}
+  - {fileID: 6578728867701531374, guid: 8f5b9b8434933af489f1344cfe3a0ff8, type: 3}
+  - {fileID: 2598651137625155906, guid: 078eac59d139c154586264574163cd1b, type: 3}
+  - {fileID: 98702663708447407, guid: 865c0bb08df81c047b79563a628afcbe, type: 3}
+  - {fileID: 7291987459327878588, guid: 95da484f5a18d1d44a7d5f563beb6ad0, type: 3}
+  - {fileID: 5250972617278321898, guid: 87dca7ef4b8532a4d8d5da0f7279bdb2, type: 3}
+  - {fileID: 3288805659344894616, guid: 23d9eb5113aa57b44b81705e8ec6f86a, type: 3}
+  - {fileID: 6245723696807594318, guid: 117ad407cc8f494479932a9ba6ce9a45, type: 3}
+  - {fileID: 6852595800735372265, guid: 71eda38101e574a4392cf033c446538e, type: 3}
+  - {fileID: 6552899862954088064, guid: ecd64de5f6c96c14d880a2a41edd751c, type: 3}
