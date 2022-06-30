@@ -149,6 +149,12 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines if given number is perfect square
+    /// </summary>
+    /// <param name="n"> The number to check against </param>
+    /// https://www.geeksforgeeks.org/check-if-given-number-is-perfect-square-in-cpp/
+    /// <returns></returns>
     static bool IsPerfectSquare(int n)
     {
 
@@ -167,6 +173,12 @@ public class GridGenerator : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Gets the next largest perfect square of a given number
+    /// </summary>
+    /// <param name="n"> The number to check against </param>
+    /// https://www.geeksforgeeks.org/find-the-next-perfect-square-greater-than-a-given-number/
+    /// <returns></returns>
     private int GetNextPerfectSquare(int n)
     {
         double root = Math.Sqrt(n);
@@ -175,6 +187,11 @@ public class GridGenerator : MonoBehaviour
         return nextPerfectSquare;
     }
 
+    /// <summary>
+    /// Gets the perfect square of a given number
+    /// </summary>
+    /// <param name="n"> The number to cehck against </param>
+    /// <returns></returns>
     private int GetPerfectSquare(int n)
     {
         if(IsPerfectSquare(n))
