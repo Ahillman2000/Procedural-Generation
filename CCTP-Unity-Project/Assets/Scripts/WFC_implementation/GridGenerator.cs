@@ -91,12 +91,12 @@ public class GridGenerator : MonoBehaviour
             {
                 int i = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
 
-                Vector3 tilePositionOffset = new Vector3(-gridDimension * sizeOfTiles / 2, 0, -gridDimension * sizeOfTiles / 2);
-                Vector3 tilePosition = tilePositionOffset + new Vector3(row * sizeOfTiles, 0, col * sizeOfTiles) + new Vector3(sizeOfTiles / 2, 0, sizeOfTiles / 2);
+                Vector3 cellPositionOffset = new Vector3(-gridDimension * sizeOfTiles / 2, 0, -gridDimension * sizeOfTiles / 2);
+                Vector3 cellPosition = cellPositionOffset + new Vector3(row * sizeOfTiles, 0, col * sizeOfTiles) + new Vector3(sizeOfTiles / 2, 0, sizeOfTiles / 2);
 
-                Cell cell = new Cell(map, i, tilePosition, tileset.prefabs);
+                Cell cell = new Cell(map, i, cellPosition, tileset.prefabs);
 
-                GameObject debugSphere = Instantiate(spherePrefab, tilePosition, Quaternion.identity);
+                GameObject debugSphere = Instantiate(spherePrefab, cellPosition, Quaternion.identity);
                 debugSphere.name = "Sphere (" + row + " , " + col + ")";
                 debugSpheres.Add(debugSphere);
                 debugSphere.transform.parent = this.debugSphere.transform;
