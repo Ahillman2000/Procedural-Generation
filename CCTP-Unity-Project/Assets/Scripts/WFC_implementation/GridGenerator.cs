@@ -7,16 +7,19 @@ using Helpers;
 
 public class GridGenerator : MonoBehaviour
 {
+    [SerializeField] private CameraHeight camHeight;
+    [SerializeField] private TileSelection tileSelector;
+
     [SerializeField] string mapName = "===== MAP =====";
 
     [Range(2, 20)] public int gridDimension = 2;
 
-    [SerializeField] private float sizeOfTiles = 5f;
+    public float sizeOfTiles = 5f;
 
     public TilesetSO tileset;
-    [SerializeField] private GameObject spherePrefab;
+    public GameObject spherePrefab;
     private GameObject debugSphere;
-    private List<GameObject> debugSpheres = new List<GameObject>();
+    public List<GameObject> debugSpheres = new List<GameObject>();
 
     public List<Cell> grid = new List<Cell>();
 
@@ -47,17 +50,15 @@ public class GridGenerator : MonoBehaviour
     /// </summary>
     public void GenerateGrid()
     {
+        camHeight.SetCameraHeight();
+
         GenerateNewMap();
         GenerateNewGrid();
 
-        Camera cam = Camera.main;
-        Vector3 camPos = cam.transform.position;
-        cam.transform.position = new Vector3(camPos.x, gridDimension * 7, camPos.z);
-
-        /*foreach (Cell cell in grid)
+        foreach (Cell cell in grid)
         {
-            ShowPossibleTilesetinCell(cell);
-        }*/
+            cell.ShowPossibleTileInstancesinCell();
+        }
     }
 
     /// <summary>
@@ -154,29 +155,6 @@ public class GridGenerator : MonoBehaviour
         else
         {
             return lowestEntropyCells[0];
-        }
-    }
-
-    /// <summary>
-    /// instantiates the posibles tiles as gameobjects around the cell
-    /// </summary>
-    /// <param name="cell"> The given cell </param>
-    public void ShowPossibleTilesetinCell(Cell cell)
-    {
-        int numberOfCells = cell.possibleTiles.Count;
-        int gridDimension = (int)Mathf.Sqrt(numberOfCells);
-        int i = 0;
-
-        foreach (GameObject possibleTile in cell.possibleTiles)
-        {
-            GameObject tileInstance = Instantiate(possibleTile, cell.position, Quaternion.identity, debugSpheres[cell.CellIndex].transform);
-            tileInstance.transform.localScale /= gridDimension;
-
-            Vector3 cellPosition = new Vector3(HelperFunctions.ConvertTo2dArray(i, gridDimension).x * sizeOfTiles * tileInstance.transform.localScale.x, -5, HelperFunctions.ConvertTo2dArray(i, gridDimension).y * sizeOfTiles * tileInstance.transform.localScale.z);
-            Vector3 cellPositionOffset = new Vector3(-sizeOfTiles / 2 * tileInstance.transform.localScale.x, 0, -sizeOfTiles / 2 * tileInstance.transform.localScale.z);
-
-            tileInstance.transform.localPosition = cellPosition + cellPositionOffset;
-            i++;
         }
     }
 }

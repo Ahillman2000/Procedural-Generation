@@ -2992,6 +2992,7 @@ MonoBehaviour:
   - direction: 3
     value: 0
   tileSet: {fileID: 11400000, guid: 97d3fc75370bdfb47b3196e175506fea, type: 2}
+  prefab: {fileID: 6578728867701531374}
   neighbourList:
   - neighbours:
     - {fileID: 5185991957638343509, guid: 7f7e1082a5497cd48bf9849ad1ecd17d, type: 3}

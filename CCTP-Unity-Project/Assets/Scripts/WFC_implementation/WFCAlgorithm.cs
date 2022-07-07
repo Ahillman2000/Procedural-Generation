@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class WFCAlgorithm : MonoBehaviour
 {
-    [SerializeField] private CameraHeight camHeight;
-
     public static WFCAlgorithm Instance { get; set; } = null;
 
     private void Awake()
@@ -19,6 +17,7 @@ public class WFCAlgorithm : MonoBehaviour
 
     public void Start()
     {
+
     }
 
     /// <summary>
@@ -28,6 +27,5 @@ public class WFCAlgorithm : MonoBehaviour
     {
         GridGenerator.Instance.GenerateGrid();
         StartCoroutine(Solver.Instance.Solve());
-        camHeight.SetCameraHeight();
     }
 }

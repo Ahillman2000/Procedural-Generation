@@ -10,6 +10,8 @@ public class Tile : MonoBehaviour
 
     [SerializeField] private TilesetSO tileSet;
 
+    public GameObject prefab;
+
     [Serializable]
     public class NeigboursInDirection
     {
@@ -17,6 +19,24 @@ public class Tile : MonoBehaviour
     }
 
     public List<NeigboursInDirection> neighbourList;
+
+    /// <summary>
+    /// runs when the script is added as component, sets socket values and neighour list to default
+    /// </summary>
+    private void Reset()
+    {
+        for (int i = 0; i < sockets.Length; i++)
+        {
+            sockets[i] = new Socket((Direction)i, 0);
+        }
+
+        neighbourList = new List<NeigboursInDirection>();
+
+        for (int i = 0; i < 4; i++)
+        {
+            neighbourList.Add(null);
+        }
+    }
 
     /// <summary>
     /// sets valid tiles for each directional socket
@@ -37,24 +57,6 @@ public class Tile : MonoBehaviour
                 }
             }
             i++;
-        }
-    }
-
-    /// <summary>
-    /// runs when the script is added as component, sets socket values and neighour list to default
-    /// </summary>
-    private void Reset()
-    {
-        for (int i = 0; i < sockets.Length; i++)
-        {
-            sockets[i] = new Socket((Direction)i, 0);
-        }
-
-        neighbourList = new List<NeigboursInDirection>();
-
-        for (int i = 0; i < 4; i++)
-        {
-            neighbourList.Add(null);
         }
     }
 }

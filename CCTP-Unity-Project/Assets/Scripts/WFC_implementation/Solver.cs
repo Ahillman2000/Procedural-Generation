@@ -82,7 +82,7 @@ public class Solver : MonoBehaviour
     /// Removes any invalid possible tiles from neighbouring tilesets after a cell has been collapsed
     /// </summary>
     /// <param name="cellToPropagate"> The cell to propagate out from </param>
-    private void Propagate(Cell cellToPropagate)
+    public void Propagate(Cell cellToPropagate)
     {
         foreach (ValidNeighbour neighbour in GetValidNeighbours(cellToPropagate))
         {
@@ -103,6 +103,8 @@ public class Solver : MonoBehaviour
             {
                 neighbour.cell.RemovePossibleTile(otherTile);
             }
+
+            neighbour.cell.ShowPossibleTileInstancesinCell();
         }
     }
 
