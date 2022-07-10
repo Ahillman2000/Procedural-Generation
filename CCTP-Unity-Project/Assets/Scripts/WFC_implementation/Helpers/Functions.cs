@@ -61,6 +61,62 @@ namespace Helpers
 
             return returnVector;
         }
+
+
+        /// <summary>
+        /// Determines if given number is perfect square
+        /// </summary>
+        /// <param name="n"> The number to check against </param>
+        /// https://www.geeksforgeeks.org/check-if-given-number-is-perfect-square-in-cpp/
+        /// <returns></returns>
+        private static bool IsPerfectSquare(int n)
+        {
+
+            // Find floating point value of
+            // square root of x.
+            if (n >= 0)
+            {
+                int root = (int)Math.Sqrt(n);
+
+                // if product of square root
+                // is equal, then
+                // return T/F
+                return (root * root == n);
+            }
+            // else return false if n<0
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the next largest perfect square of a given number
+        /// </summary>
+        /// <param name="n"> The number to check against </param>
+        /// https://www.geeksforgeeks.org/find-the-next-perfect-square-greater-than-a-given-number/
+        /// <returns></returns>
+        private static int GetNextPerfectSquare(int n)
+        {
+            double root = Math.Sqrt(n);
+            int nextN = (int)Math.Floor(root) + 1;
+            int nextPerfectSquare = (int)Math.Pow(nextN, 2);
+            return nextPerfectSquare;
+        }
+
+        /// <summary>
+        /// Gets the perfect square of a given number
+        /// </summary>
+        /// <param name="n"> The number to cehck against </param>
+        /// <returns></returns>
+        public static int GetPerfectSquare(int n)
+        {
+            if (IsPerfectSquare(n))
+            {
+                return n;
+            }
+            else
+            {
+                return GetNextPerfectSquare(n);
+            }
+        }
     }
 }
 

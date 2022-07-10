@@ -1,3 +1,4 @@
+using Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +9,10 @@ using WaveFunctionCollapse;
 public class Cell
 {
     public int CellIndex { get; set; } = 0;
-    public Vector3 position = Vector3.zero;
+    public Vector3 cellPosition = Vector3.zero;
+
     public List<GameObject> possibleTiles;
+    public List<GameObject> tileInstances = new List<GameObject>();
 
     public bool Collapsed { get; set; } = false;
 
@@ -23,12 +26,12 @@ public class Cell
     /// </summary>
     /// <param name="parentObj"> The parent object that the final tile with be a child of </param>
     /// <param name="cellIndex"> The index of the cell within a grid </param>
-    /// <param name="position">  The world space of the object </param>
+    /// <param name="cellPosition">  The world space of the object </param>
     /// <param name="possibleTiles"> The possible tiles that this cell could be </param>
-    public Cell(GameObject parentObj, int cellIndex, Vector3 position, List<GameObject> possibleTiles)
+    public Cell(GameObject parentObj, int cellIndex, Vector3 cellPosition, List<GameObject> possibleTiles)
     {
         this.CellIndex = cellIndex;
-        this.position = position;
+        this.cellPosition = cellPosition;
         this.possibleTiles = new List<GameObject>(possibleTiles);
         this.parentObj = parentObj;
 
@@ -58,9 +61,7 @@ public class Cell
 
             if (possibleTiles.Count == 1)
             {
-                Collapsed = true;
                 SetTile(possibleTiles[0]);
-                solver.OnCellCollapse();
             }
         }
     }
@@ -71,8 +72,15 @@ public class Cell
     /// <param name="tile"> The tile value to be set to </param>
     public void SetTile(GameObject tile)
     {
-        this.tile = tile;
-        GameObject.Instantiate(tile, position, Quaternion.identity, parentObj.transform);
+        if(this.tile == null)
+        {
+            Collapsed = true;
+            this.tile = tile;
+            GameObject instance = GameObject.Instantiate(tile, cellPosition, Quaternion.identity, parentObj.transform);
+            instance.transform.localScale = Vector3.one;
+            solver.OnCellCollapse();
+            RemoveAllPossibleTileInstancesinCell();
+        }
     }
 
     /// <summary>
@@ -123,5 +131,61 @@ public class Cell
             Debug.LogError("No tile gameObject assigned to this object");
             return null;
         }
+    }
+
+    public void ShowPossibleTileInstancesinCell()
+    {
+        if (tileInstances.Count > 0)
+        {
+            RemoveAllPossibleTileInstancesinCell();
+        }
+        if(Collapsed)
+        {
+            return;
+        }
+
+        int numberOfCells = GridGenerator.Instance.tileset.prefabs.Count;
+        int gridDimension = (int)Mathf.Sqrt(HelperFunctions.GetPerfectSquare(numberOfCells));
+
+        if(numberOfCells > 1)
+        {
+            for (int row = 0; row < gridDimension; row++)
+            {
+                for (int col = 0; col < gridDimension; col++)
+                {
+                    Vector3 tilePositionOffset = new Vector3(-gridDimension * gridDimension / 2, 0, -gridDimension * gridDimension / 2) + new Vector3(gridDimension / 2, 0, gridDimension / 2);
+                    Vector3 tilePositioning = new Vector3(row * gridDimension, 0, col * gridDimension);
+                    Vector3 tilePosition = cellPosition + tilePositionOffset + tilePositioning;
+
+                    int index = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
+                    if (index < possibleTiles.Count)
+                    {
+                        GameObject tileInstance = GameObject.Instantiate(possibleTiles[index], tilePosition, Quaternion.identity);
+
+                        tileInstance.transform.parent = GridGenerator.Instance.debugSpheres[CellIndex].transform;
+                        tileInstance.transform.localScale /= HelperFunctions.GetPerfectSquare(numberOfCells) / 2;
+
+                        tileInstances.Add(tileInstance);
+                    }
+                    else
+                    {
+                        GameObject debugSphere = GameObject.Instantiate(GridGenerator.Instance.spherePrefab, tilePosition, Quaternion.identity);
+                        debugSphere.transform.parent = GridGenerator.Instance.debugSpheres[CellIndex].transform;
+                        debugSphere.name = "Sphere (" + row + " , " + col + ")";
+
+                        tileInstances.Add(debugSphere);
+                    }
+                }
+            }
+        }
+    }
+
+    public void RemoveAllPossibleTileInstancesinCell()
+    {
+        for (int i = 0; i < tileInstances.Count; i++)
+        {
+            GameObject.Destroy(tileInstances[i]);
+        }
+        tileInstances.Clear();
     }
 }

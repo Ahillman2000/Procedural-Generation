@@ -10,9 +10,12 @@ public class Solver : MonoBehaviour
     //[SerializeField] private GridGenerator gridGenerator;
     private GridGenerator gridGenerator;
 
-    private int numberOfTilesCollapsed;
+    private static int numberOfCellsCollapsed = 0;
 
     public static Solver Instance { get; set; } = null;
+
+    [Range(0f,1f)]
+    public float delay = 0f;
 
     private void Awake()
     {
@@ -44,12 +47,12 @@ public class Solver : MonoBehaviour
     /// <summary>
     /// The main WFC solver function
     /// </summary>
-    public void Solve()
+    public IEnumerator Solve()
     {
-        numberOfTilesCollapsed = 0;
-        while (numberOfTilesCollapsed < gridGenerator.grid.Count)
+        while (numberOfCellsCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
+            yield return new WaitForSeconds(delay);
         }
     }
 
@@ -78,7 +81,7 @@ public class Solver : MonoBehaviour
     /// Removes any invalid possible tiles from neighbouring tilesets after a cell has been collapsed
     /// </summary>
     /// <param name="cellToPropagate"> The cell to propagate out from </param>
-    private void Propagate(Cell cellToPropagate)
+    public void Propagate(Cell cellToPropagate)
     {
         foreach (ValidNeighbour neighbour in GetValidNeighbours(cellToPropagate))
         {
@@ -99,6 +102,8 @@ public class Solver : MonoBehaviour
             {
                 neighbour.cell.RemovePossibleTile(otherTile);
             }
+
+            neighbour.cell.ShowPossibleTileInstancesinCell();
         }
     }
 
@@ -155,11 +160,21 @@ public class Solver : MonoBehaviour
         return validNeighbours;
     }
 
+    public void ResetNumberOfCellsCollapsed()
+    {
+        numberOfCellsCollapsed = 0;
+    }
+
+    public int GetNumberOfCellsCollapsed()
+    {
+        return numberOfCellsCollapsed;
+    }
+
     /// <summary>
     /// Trigger for when a cell collapses, used to keep count of total collapsed cells
     /// </summary>
     public void OnCellCollapse()
     {
-        numberOfTilesCollapsed++;
+        numberOfCellsCollapsed++;
     }
 }
