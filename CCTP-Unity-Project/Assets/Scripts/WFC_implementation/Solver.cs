@@ -10,7 +10,7 @@ public class Solver : MonoBehaviour
     //[SerializeField] private GridGenerator gridGenerator;
     private GridGenerator gridGenerator;
 
-    private int numberOfCellsCollapsed = 0;
+    private static int numberOfCellsCollapsed = 0;
 
     public static Solver Instance { get; set; } = null;
 
@@ -49,7 +49,6 @@ public class Solver : MonoBehaviour
     /// </summary>
     public IEnumerator Solve()
     {
-        numberOfCellsCollapsed = 0;
         while (numberOfCellsCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
@@ -159,6 +158,16 @@ public class Solver : MonoBehaviour
             /*else Debug.Log(direction + " is NOT valid");*/
         }
         return validNeighbours;
+    }
+
+    public void ResetNumberOfCellsCollapsed()
+    {
+        numberOfCellsCollapsed = 0;
+    }
+
+    public int GetNumberOfCellsCollapsed()
+    {
+        return numberOfCellsCollapsed;
     }
 
     /// <summary>

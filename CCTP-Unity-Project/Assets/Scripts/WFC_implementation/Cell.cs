@@ -78,10 +78,8 @@ public class Cell
             this.tile = tile;
             GameObject instance = GameObject.Instantiate(tile, cellPosition, Quaternion.identity, parentObj.transform);
             instance.transform.localScale = Vector3.one;
-
-            RemoveAllPossibleTileInstancesinCell();
-
             solver.OnCellCollapse();
+            RemoveAllPossibleTileInstancesinCell();
         }
     }
 
@@ -146,7 +144,6 @@ public class Cell
             return;
         }
 
-        //int numberOfCells = possibleTiles.Count
         int numberOfCells = GridGenerator.Instance.tileset.prefabs.Count;
         int gridDimension = (int)Mathf.Sqrt(HelperFunctions.GetPerfectSquare(numberOfCells));
 
@@ -156,12 +153,8 @@ public class Cell
             {
                 for (int col = 0; col < gridDimension; col++)
                 {
-                    //Vector3 tilePositionOffset = new Vector3(-gridDimension * gridDimension / 2, 0, -gridDimension * gridDimension / 2);
-                    //Vector3 tilePositioning = new Vector3(row * gridDimension / 2, 0, col * gridDimension / 2) + new Vector3(gridDimension / 2, 0, gridDimension / 2);
-                    //Vector3 tilePosition = cellPosition + tilePositionOffset + tilePositioning;
-
-                    Vector3 tilePositionOffset = new Vector3(-gridDimension * gridDimension / 2, 0, -gridDimension * gridDimension / 2);
-                    Vector3 tilePositioning = new Vector3(row * gridDimension, 0, col * gridDimension) + new Vector3(gridDimension, 0, gridDimension);
+                    Vector3 tilePositionOffset = new Vector3(-gridDimension * gridDimension / 2, 0, -gridDimension * gridDimension / 2) + new Vector3(gridDimension / 2, 0, gridDimension / 2);
+                    Vector3 tilePositioning = new Vector3(row * gridDimension, 0, col * gridDimension);
                     Vector3 tilePosition = cellPosition + tilePositionOffset + tilePositioning;
 
                     int index = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
@@ -185,11 +178,6 @@ public class Cell
                 }
             }
         }
-    }
-
-    public void UpdatePossibleTileInstancesinCell()
-    {
-
     }
 
     public void RemoveAllPossibleTileInstancesinCell()

@@ -28,4 +28,5 @@ public class WFCAlgorithm : MonoBehaviour
         GridGenerator.Instance.GenerateGrid();
         StartCoroutine(Solver.Instance.Solve());
     }
+
 }

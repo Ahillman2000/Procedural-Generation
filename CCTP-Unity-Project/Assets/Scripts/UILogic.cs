@@ -38,6 +38,11 @@ public class UILogic : MonoBehaviour
 
     public void OnSolvePressed()
     {
+        StartCoroutine(Solver.Instance.Solve());
+    }
+
+    public void FullWFC()
+    {
         WFCAlgorithm.Instance.Execute();
     }
 

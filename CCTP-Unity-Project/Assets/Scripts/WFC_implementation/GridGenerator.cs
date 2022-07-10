@@ -8,7 +8,6 @@ using Helpers;
 public class GridGenerator : MonoBehaviour
 {
     [SerializeField] private CameraHeight camHeight;
-    [SerializeField] private TileSelection tileSelector;
 
     [SerializeField] string mapName = "===== MAP =====";
 
@@ -59,6 +58,8 @@ public class GridGenerator : MonoBehaviour
         {
             cell.ShowPossibleTileInstancesinCell();
         }
+
+        Solver.Instance.ResetNumberOfCellsCollapsed();
     }
 
     /// <summary>
