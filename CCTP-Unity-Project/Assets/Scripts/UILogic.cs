@@ -38,7 +38,10 @@ public class UILogic : MonoBehaviour
 
     public void OnSolvePressed()
     {
-        StartCoroutine(Solver.Instance.Solve());
+        if (GridGenerator.Instance.gridGenerated)
+        {
+            StartCoroutine(Solver.Instance.Solve());
+        }
     }
 
     public void FullWFC()

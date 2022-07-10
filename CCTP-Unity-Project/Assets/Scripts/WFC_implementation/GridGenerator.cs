@@ -24,6 +24,8 @@ public class GridGenerator : MonoBehaviour
 
     private GameObject map;
 
+    public bool gridGenerated = false;
+
     public static GridGenerator Instance { get; set; } = null;
 
     private void Awake()
@@ -60,6 +62,7 @@ public class GridGenerator : MonoBehaviour
         }
 
         Solver.Instance.ResetNumberOfCellsCollapsed();
+        gridGenerated = true;
     }
 
     /// <summary>
