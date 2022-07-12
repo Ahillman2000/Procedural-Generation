@@ -10,7 +10,7 @@ public class Tile : MonoBehaviour
 
     [SerializeField] private TilesetSO tileSet;
 
-    public GameObject prefab;
+    [HideInInspector] public int prefabIndex;
 
     [Serializable]
     public class NeigboursInDirection

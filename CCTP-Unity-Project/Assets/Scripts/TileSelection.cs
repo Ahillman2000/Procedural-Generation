@@ -10,6 +10,8 @@ public class TileSelection : MonoBehaviour
     GridGenerator gridGenerator;
     Solver solver;
 
+    [SerializeField] private TilesetSO tileset;
+
     private void Start()
     {
         gridGenerator = GridGenerator.Instance;
@@ -46,7 +48,7 @@ public class TileSelection : MonoBehaviour
             Tile tile = hitObject.GetComponentInParent(typeof(Tile)) as Tile;
             if (tile != null)
             {
-                gridGenerator.grid[hitCellIndex].SetTile(tile.prefab);
+                gridGenerator.grid[hitCellIndex].SetTile(tileset.prefabs[tile.prefabIndex]);
                 solver.Propagate(gridGenerator.grid[hitCellIndex]);
             }
         }

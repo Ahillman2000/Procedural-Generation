@@ -122,13 +122,13 @@ public class Cell
             }
             else
             {
-                Debug.LogError("No tile component attached to this gameObject");
+                Debug.LogError("No tile component attached to cell:" + CellIndex);
                 return null;
             }
         }
         else
         {
-            Debug.LogError("No tile gameObject assigned to this object");
+            Debug.LogError("No tile gameObject assigned to cell: " + CellIndex);
             return null;
         }
     }

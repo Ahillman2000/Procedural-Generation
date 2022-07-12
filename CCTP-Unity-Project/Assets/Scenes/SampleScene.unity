@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c12ecf7719a7b85439b17ab5178189e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0.5
+  delay: 0.01
 --- !u!114 &9397677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camHeight: {fileID: 963194229}
   mapName: ===== CITY MAP =====
-  gridDimension: 3
+  gridDimension: 5
   sizeOfTiles: 30
   tileset: {fileID: 11400000, guid: 97d3fc75370bdfb47b3196e175506fea, type: 2}
   spherePrefab: {fileID: 203419289001086225, guid: 9fbdbd0af86ce9842b70820104a61036, type: 3}
@@ -615,6 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b41599e7a133f049974d25f5ee0e660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileset: {fileID: 11400000, guid: 97d3fc75370bdfb47b3196e175506fea, type: 2}
 --- !u!1 &167361704
 GameObject:
   m_ObjectHideFlags: 0
@@ -3123,7 +3124,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1521314038
 Transform:
   m_ObjectHideFlags: 0
