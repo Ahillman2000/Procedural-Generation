@@ -10,7 +10,7 @@ public class Tile : MonoBehaviour
 
     [SerializeField] private TilesetSO tileSet;
 
-    [HideInInspector] public int prefabIndex;
+    /*[HideInInspector]*/ public int prefabIndex;
 
     [Serializable]
     public class NeigboursInDirection

@@ -1938,7 +1938,7 @@ MonoBehaviour:
   - direction: 3
     value: 1
   tileSet: {fileID: 11400000, guid: 97d3fc75370bdfb47b3196e175506fea, type: 2}
-  prefab: {fileID: 5250972617278321898}
+  prefabIndex: 7
   neighbourList:
   - neighbours:
     - {fileID: 5298349355509281619, guid: f354ae880e9f9f34cb3dfac7ee86d780, type: 3}

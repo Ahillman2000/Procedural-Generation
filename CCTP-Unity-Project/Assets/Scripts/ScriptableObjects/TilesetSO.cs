@@ -6,12 +6,4 @@ using UnityEngine;
 public class TilesetSO : ScriptableObject
 {
     public List<GameObject> prefabs = new List<GameObject>();
-
-    public void SetPrefabIndexes()
-    {
-        for (int i = 0; i < prefabs.Count; i++)
-        {
-            prefabs[i].GetComponent<Tile>().prefabIndex = i;
-        }
-    }
 }
