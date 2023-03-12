@@ -5,10 +5,16 @@ using UnityEngine;
 
 public class WFCAlgorithm : MonoBehaviour
 {
-    public static WFCAlgorithm Instance { get; set; } = null;
+    public static WFCAlgorithm Instance { get; private set; }
+    
+    public GridGenerator GridGenerator;
+    public Solver Solver;
 
-    [SerializeField] private GridGenerator gridGenerator;
-    [SerializeField] private Solver solver;
+    [Header("Map Settings")]
+    [SerializeField] private bool newMapAtRuntime = false;
+    public string MapName = "===== MAP =====";
+    //public int gridWidth;
+    //public int gridLength;
 
     private void Awake()
     {
@@ -25,7 +31,8 @@ public class WFCAlgorithm : MonoBehaviour
 
     public void Start()
     {
-        Execute();
+        if(newMapAtRuntime)
+            Execute();
     }
 
     /// <summary>
@@ -33,8 +40,8 @@ public class WFCAlgorithm : MonoBehaviour
     /// </summary>
     public void Execute()
     {
-        gridGenerator.GenerateGrid();
-        solver.Solve();
+        GridGenerator.GenerateGrid();
+        Solver.Solve();
         //return gridGenerator.Map;
     }
 }

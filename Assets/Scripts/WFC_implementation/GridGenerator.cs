@@ -8,16 +8,14 @@ using Helpers;
 public class GridGenerator : MonoBehaviour
 {
     public static GridGenerator Instance { get; set; } = null;
-    [SerializeField] private Solver solver;
+    [SerializeField] private WFCAlgorithm wFC;
 
-    [Header("Map")]
-    [SerializeField] string mapName = "===== MAP =====";
-    public GameObject Map;
+    [HideInInspector] public GameObject Map;
 
     [Header("Grid")]
     [Range(2, 20)] public int gridDimension = 2;
     public List<Cell> grid = new List<Cell>();
-    public bool gridGenerated = false;
+    [HideInInspector] public bool gridGenerated = false;
 
     [Header("Tiles")]
     public float sizeOfTiles = 5f;
@@ -61,7 +59,7 @@ public class GridGenerator : MonoBehaviour
             cell.ShowPossibleTileInstancesinCell();
         }*/
 
-        solver.ResetNumberOfCellsCollapsed();
+        wFC.Solver.ResetNumberOfCellsCollapsed();
         gridGenerated = true;
     }
 
@@ -71,11 +69,11 @@ public class GridGenerator : MonoBehaviour
     /// <returns> A new blank gameObject</returns>
     private void GenerateNewMap()
     {
-        if (GameObject.Find(mapName))
+        if (GameObject.Find(wFC.MapName))
         {
-            DestroyImmediate(GameObject.Find(mapName));
+            DestroyImmediate(GameObject.Find(wFC.MapName));
         }
-        Map = new GameObject(mapName);
+        Map = new GameObject(wFC.MapName);
     }
 
     // TODO: should be made public and return grid
@@ -95,7 +93,7 @@ public class GridGenerator : MonoBehaviour
                 Vector3 cellPositionOffset = new Vector3(-gridDimension * sizeOfTiles / 2, 0, -gridDimension * sizeOfTiles / 2);
                 Vector3 cellPosition = cellPositionOffset + new Vector3(row * sizeOfTiles, 0, col * sizeOfTiles) + new Vector3(sizeOfTiles / 2, 0, sizeOfTiles / 2);
 
-                Cell cell = new Cell(solver, Map, i, cellPosition, tileset.prefabs);
+                Cell cell = new Cell(wFC.Solver, Map, i, cellPosition, tileset.prefabs);
                 grid.Add(cell);
             }
         }

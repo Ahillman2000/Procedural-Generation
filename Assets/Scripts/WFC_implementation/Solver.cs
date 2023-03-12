@@ -8,9 +8,7 @@ using WaveFunctionCollapse;
 public class Solver : MonoBehaviour
 {
     public static Solver Instance { get; set; } = null;
-    [SerializeField] private GridGenerator gridGenerator;
-
-    [Range(0f, 1f)] public float delay = 0f;
+    [SerializeField] private WFCAlgorithm wFC;
 
     private static int numberOfCellsCollapsed = 0;
 
@@ -51,7 +49,7 @@ public class Solver : MonoBehaviour
     /// </summary>
     public void Solve()
     {
-        while (numberOfCellsCollapsed < gridGenerator.grid.Count)
+        while (numberOfCellsCollapsed < wFC.GridGenerator.grid.Count)
         {
             Iterate();
         }
@@ -62,7 +60,7 @@ public class Solver : MonoBehaviour
     /// </summary>
     public void Iterate()
     {
-        Cell cell = gridGenerator.GetCellWithLowestEntropy();
+        Cell cell = wFC.GridGenerator.GetCellWithLowestEntropy();
         CollapseCell(cell);
         Propagate(cell);
     }
@@ -143,11 +141,11 @@ public class Solver : MonoBehaviour
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
         foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
-            if (HelperFunctions.CheckForValidNeighbourInDirection(cell.CellIndex, gridGenerator.gridDimension, gridGenerator.gridDimension, direction))
+            if (HelperFunctions.CheckForValidNeighbourInDirection(cell.CellIndex, wFC.GridGenerator.gridDimension, wFC.GridGenerator.gridDimension, direction))
             {
                 ValidNeighbour validNeighbour = new ValidNeighbour
                 {
-                    cell = gridGenerator.grid[GetNeinbourInDirection(cell.CellIndex, direction, gridGenerator.gridDimension)],
+                    cell = wFC.GridGenerator.grid[GetNeinbourInDirection(cell.CellIndex, direction, wFC.GridGenerator.gridDimension)],
                     conectionDirection = direction
                 };
 
