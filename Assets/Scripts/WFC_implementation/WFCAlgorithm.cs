@@ -7,17 +7,25 @@ public class WFCAlgorithm : MonoBehaviour
 {
     public static WFCAlgorithm Instance { get; set; } = null;
 
+    [SerializeField] private GridGenerator gridGenerator;
+    [SerializeField] private Solver solver;
+
     private void Awake()
     {
         if (Instance == null)
-            Instance = (WFCAlgorithm)FindObjectOfType(typeof(WFCAlgorithm));
-        else
+        {
             Instance = this;
+        }
+        else
+        {
+            Debug.LogError($"There should only be one instance of {this}");
+            Destroy(this.gameObject);
+        }
     }
 
     public void Start()
     {
-
+        Execute();
     }
 
     /// <summary>
@@ -25,8 +33,8 @@ public class WFCAlgorithm : MonoBehaviour
     /// </summary>
     public void Execute()
     {
-        GridGenerator.Instance.GenerateGrid();
-        StartCoroutine(Solver.Instance.Solve());
+        gridGenerator.GenerateGrid();
+        solver.Solve();
+        //return gridGenerator.Map;
     }
-
 }

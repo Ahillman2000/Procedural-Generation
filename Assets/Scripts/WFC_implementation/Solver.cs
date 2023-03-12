@@ -7,27 +7,29 @@ using WaveFunctionCollapse;
 
 public class Solver : MonoBehaviour
 {
-    //[SerializeField] private GridGenerator gridGenerator;
-    private GridGenerator gridGenerator;
+    public static Solver Instance { get; set; } = null;
+    [SerializeField] private GridGenerator gridGenerator;
+
+    [Range(0f, 1f)] public float delay = 0f;
 
     private static int numberOfCellsCollapsed = 0;
-
-    public static Solver Instance { get; set; } = null;
-
-    [Range(0f,1f)]
-    public float delay = 0f;
 
     private void Awake()
     {
         if (Instance == null)
-            Instance = (Solver)FindObjectOfType(typeof(Solver));
-        else
+        {
             Instance = this;
+        }
+        else
+        {
+            Debug.LogError($"There should only be one instance of {this}");
+            Destroy(this.gameObject);
+        }
     }
 
     void Start()
     {
-        gridGenerator = GridGenerator.Instance;
+
     }
 
     void Update()
@@ -47,12 +49,11 @@ public class Solver : MonoBehaviour
     /// <summary>
     /// The main WFC solver function
     /// </summary>
-    public IEnumerator Solve()
+    public void Solve()
     {
         while (numberOfCellsCollapsed < gridGenerator.grid.Count)
         {
             Iterate();
-            yield return new WaitForSeconds(delay);
         }
     }
 
@@ -103,7 +104,7 @@ public class Solver : MonoBehaviour
                 neighbour.cell.RemovePossibleTile(otherTile);
             }
 
-            neighbour.cell.ShowPossibleTileInstancesinCell();
+            //neighbour.cell.ShowPossibleTileInstancesinCell();
         }
     }
 

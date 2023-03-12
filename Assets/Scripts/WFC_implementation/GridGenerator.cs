@@ -7,33 +7,33 @@ using Helpers;
 
 public class GridGenerator : MonoBehaviour
 {
-    [SerializeField] private CameraHeight camHeight;
+    public static GridGenerator Instance { get; set; } = null;
+    [SerializeField] private Solver solver;
 
+    [Header("Map")]
     [SerializeField] string mapName = "===== MAP =====";
+    public GameObject Map;
 
+    [Header("Grid")]
     [Range(2, 20)] public int gridDimension = 2;
-
-    public float sizeOfTiles = 5f;
-
-    public TilesetSO tileset;
-    public GameObject spherePrefab;
-    private GameObject debugSphere;
-    public List<GameObject> debugSpheres = new List<GameObject>();
-
     public List<Cell> grid = new List<Cell>();
-
-    private GameObject map;
-
     public bool gridGenerated = false;
 
-    public static GridGenerator Instance { get; set; } = null;
+    [Header("Tiles")]
+    public float sizeOfTiles = 5f;
+    public TilesetSO tileset;
 
     private void Awake()
     {
         if (Instance == null)
-            Instance = (GridGenerator)FindObjectOfType(typeof(GridGenerator));
-        else
+        {
             Instance = this;
+        }
+        else
+        {
+            Debug.LogError($"There should only be one instance of {this}");
+            Destroy(this.gameObject);
+        }
     }
 
     /// <summary>
@@ -51,17 +51,17 @@ public class GridGenerator : MonoBehaviour
     /// </summary>
     public void GenerateGrid()
     {
-        camHeight.SetCameraHeight();
+        gridGenerated = false;
 
         GenerateNewMap();
         GenerateNewGrid();
 
-        foreach (Cell cell in grid)
+        /*foreach (Cell cell in grid)
         {
             cell.ShowPossibleTileInstancesinCell();
-        }
+        }*/
 
-        Solver.Instance.ResetNumberOfCellsCollapsed();
+        solver.ResetNumberOfCellsCollapsed();
         gridGenerated = true;
     }
 
@@ -75,7 +75,7 @@ public class GridGenerator : MonoBehaviour
         {
             DestroyImmediate(GameObject.Find(mapName));
         }
-        map = new GameObject(mapName);
+        Map = new GameObject(mapName);
     }
 
     // TODO: should be made public and return grid
@@ -85,10 +85,6 @@ public class GridGenerator : MonoBehaviour
     private void GenerateNewGrid()
     {
         grid.Clear();
-        debugSpheres.Clear();
-
-        debugSphere = new GameObject("debugSpheres");
-        debugSphere.transform.parent = map.transform;
 
         for (int row = 0; row < gridDimension; row++)
         {
@@ -99,12 +95,7 @@ public class GridGenerator : MonoBehaviour
                 Vector3 cellPositionOffset = new Vector3(-gridDimension * sizeOfTiles / 2, 0, -gridDimension * sizeOfTiles / 2);
                 Vector3 cellPosition = cellPositionOffset + new Vector3(row * sizeOfTiles, 0, col * sizeOfTiles) + new Vector3(sizeOfTiles / 2, 0, sizeOfTiles / 2);
 
-                Cell cell = new Cell(map, i, cellPosition, tileset.prefabs);
-
-                GameObject debugSphere = Instantiate(spherePrefab, cellPosition, Quaternion.identity);
-                debugSphere.name = "Sphere (" + row + " , " + col + ")";
-                debugSpheres.Add(debugSphere);
-                debugSphere.transform.parent = this.debugSphere.transform;
+                Cell cell = new Cell(solver, Map, i, cellPosition, tileset.prefabs);
                 grid.Add(cell);
             }
         }

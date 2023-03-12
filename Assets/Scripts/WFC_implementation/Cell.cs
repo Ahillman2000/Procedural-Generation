@@ -12,7 +12,7 @@ public class Cell
     public Vector3 cellPosition = Vector3.zero;
 
     public List<GameObject> possibleTiles;
-    public List<GameObject> tileInstances = new List<GameObject>();
+    //public List<GameObject> tileInstances = new List<GameObject>();
 
     public bool Collapsed { get; set; } = false;
 
@@ -28,15 +28,13 @@ public class Cell
     /// <param name="cellIndex"> The index of the cell within a grid </param>
     /// <param name="cellPosition">  The world space of the object </param>
     /// <param name="possibleTiles"> The possible tiles that this cell could be </param>
-    public Cell(GameObject parentObj, int cellIndex, Vector3 cellPosition, List<GameObject> possibleTiles)
+    public Cell(Solver solver, GameObject parentObj, int cellIndex, Vector3 cellPosition, List<GameObject> possibleTiles)
     {
+        this.solver = solver;
         this.CellIndex = cellIndex;
         this.cellPosition = cellPosition;
         this.possibleTiles = new List<GameObject>(possibleTiles);
         this.parentObj = parentObj;
-
-        //solver = GameObject.Find("Wave Function Collapse").GetComponent<Solver>();
-        solver = Solver.Instance;
     }
 
     /// <summary>
@@ -79,7 +77,7 @@ public class Cell
             GameObject instance = GameObject.Instantiate(tile, cellPosition, Quaternion.identity, parentObj.transform);
             instance.transform.localScale = Vector3.one;
             solver.OnCellCollapse();
-            RemoveAllPossibleTileInstancesinCell();
+            //RemoveAllPossibleTileInstancesinCell();
         }
     }
 
@@ -133,7 +131,7 @@ public class Cell
         }
     }
 
-    public void ShowPossibleTileInstancesinCell()
+    /*public void ShowPossibleTileInstancesinCell()
     {
         if (tileInstances.Count > 0)
         {
@@ -187,5 +185,5 @@ public class Cell
             GameObject.Destroy(tileInstances[i]);
         }
         tileInstances.Clear();
-    }
+    }*/
 }

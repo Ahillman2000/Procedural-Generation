@@ -7,7 +7,7 @@ using System;
 
 public class TileSelection : MonoBehaviour
 {
-    GridGenerator gridGenerator;
+    /*GridGenerator gridGenerator;
     Solver solver;
 
     [SerializeField] private TilesetSO tileset;
@@ -52,5 +52,5 @@ public class TileSelection : MonoBehaviour
                 solver.Propagate(gridGenerator.grid[hitCellIndex]);
             }
         }
-    } 
+    } */
 }
