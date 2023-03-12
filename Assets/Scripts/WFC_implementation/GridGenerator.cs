@@ -13,13 +13,9 @@ public class GridGenerator : MonoBehaviour
     [HideInInspector] public GameObject Map;
 
     [Header("Grid")]
-    [Range(2, 20)] public int gridDimension = 2;
-    public List<Cell> grid = new List<Cell>();
+    //[Range(2, 20)] public int gridDimension = 2;
+    [HideInInspector] public List<Cell> grid = new List<Cell>();
     [HideInInspector] public bool gridGenerated = false;
-
-    [Header("Tiles")]
-    public float sizeOfTiles = 5f;
-    public TilesetSO tileset;
 
     private void Awake()
     {
@@ -84,16 +80,16 @@ public class GridGenerator : MonoBehaviour
     {
         grid.Clear();
 
-        for (int row = 0; row < gridDimension; row++)
+        for (int row = 0; row < wFC.GridDimension; row++)
         {
-            for (int col = 0; col < gridDimension; col++)
+            for (int col = 0; col < wFC.GridDimension; col++)
             {
-                int i = HelperFunctions.ConvertTo1dArray(row, col, gridDimension);
+                int i = HelperFunctions.ConvertTo1dArray(row, col, wFC.GridDimension);
 
-                Vector3 cellPositionOffset = new Vector3(-gridDimension * sizeOfTiles / 2, 0, -gridDimension * sizeOfTiles / 2);
-                Vector3 cellPosition = cellPositionOffset + new Vector3(row * sizeOfTiles, 0, col * sizeOfTiles) + new Vector3(sizeOfTiles / 2, 0, sizeOfTiles / 2);
+                Vector3 cellPositionOffset = new Vector3(-wFC.GridDimension * wFC.SizeOfTiles / 2, 0, -wFC.GridDimension * wFC.SizeOfTiles / 2);
+                Vector3 cellPosition = cellPositionOffset + new Vector3(row * wFC.SizeOfTiles, 0, col * wFC.SizeOfTiles) + new Vector3(wFC.SizeOfTiles / 2, 0, wFC.SizeOfTiles / 2);
 
-                Cell cell = new Cell(wFC.Solver, Map, i, cellPosition, tileset.prefabs);
+                Cell cell = new Cell(wFC.Solver, Map, i, cellPosition, wFC.Tileset.prefabs);
                 grid.Add(cell);
             }
         }

@@ -141,11 +141,11 @@ public class Solver : MonoBehaviour
         List<ValidNeighbour> validNeighbours = new List<ValidNeighbour>();
         foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
-            if (HelperFunctions.CheckForValidNeighbourInDirection(cell.CellIndex, wFC.GridGenerator.gridDimension, wFC.GridGenerator.gridDimension, direction))
+            if (HelperFunctions.CheckForValidNeighbourInDirection(cell.CellIndex, wFC.GridDimension, wFC.GridDimension, direction))
             {
                 ValidNeighbour validNeighbour = new ValidNeighbour
                 {
-                    cell = wFC.GridGenerator.grid[GetNeinbourInDirection(cell.CellIndex, direction, wFC.GridGenerator.gridDimension)],
+                    cell = wFC.GridGenerator.grid[GetNeinbourInDirection(cell.CellIndex, direction, wFC.GridDimension)],
                     conectionDirection = direction
                 };
 

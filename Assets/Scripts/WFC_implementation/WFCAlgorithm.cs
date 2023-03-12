@@ -13,8 +13,13 @@ public class WFCAlgorithm : MonoBehaviour
     [Header("Map Settings")]
     [SerializeField] private bool newMapAtRuntime = false;
     public string MapName = "===== MAP =====";
+    [Range(2, 20)] public int GridDimension = 5;
     //public int gridWidth;
     //public int gridLength;
+
+    [Header("Tile Settings")]
+    public float SizeOfTiles = 30f;
+    public TilesetSO Tileset;
 
     private void Awake()
     {
