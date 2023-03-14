@@ -5,9 +5,8 @@ using UnityEngine;
 using WaveFunctionCollapse;
 using Helpers;
 
-public class GridGenerator : MonoBehaviour
+public class GridGenerator
 {
-    public static GridGenerator Instance { get; set; } = null;
     [SerializeField] private WFCAlgorithm wFC;
 
     [HideInInspector] public GameObject Map;
@@ -17,17 +16,9 @@ public class GridGenerator : MonoBehaviour
     [HideInInspector] public List<Cell> grid = new List<Cell>();
     [HideInInspector] public bool gridGenerated = false;
 
-    private void Awake()
+    public GridGenerator(WFCAlgorithm wFC)
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Debug.LogError($"There should only be one instance of {this}");
-            Destroy(this.gameObject);
-        }
+        this.wFC = wFC;
     }
 
     /// <summary>
@@ -67,7 +58,7 @@ public class GridGenerator : MonoBehaviour
     {
         if (GameObject.Find(wFC.MapName))
         {
-            DestroyImmediate(GameObject.Find(wFC.MapName));
+            GameObject.DestroyImmediate(GameObject.Find(wFC.MapName));
         }
         Map = new GameObject(wFC.MapName);
     }

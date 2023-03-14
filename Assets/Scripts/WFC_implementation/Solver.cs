@@ -5,34 +5,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using WaveFunctionCollapse;
 
-public class Solver : MonoBehaviour
+public class Solver
 {
-    public static Solver Instance { get; set; } = null;
     [SerializeField] private WFCAlgorithm wFC;
 
     private static int numberOfCellsCollapsed = 0;
 
-    private void Awake()
+    public Solver(WFCAlgorithm wFC)
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Debug.LogError($"There should only be one instance of {this}");
-            Destroy(this.gameObject);
-        }
-    }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
+        this.wFC = wFC;
     }
 
     /// <summary>

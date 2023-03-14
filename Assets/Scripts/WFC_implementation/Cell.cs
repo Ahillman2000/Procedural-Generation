@@ -17,7 +17,7 @@ public class Cell
     public bool Collapsed { get; set; } = false;
 
     [SerializeField] private GameObject tile;
-    readonly GameObject parentObj;
+    private GameObject parentObj;
 
     private Solver solver;
 

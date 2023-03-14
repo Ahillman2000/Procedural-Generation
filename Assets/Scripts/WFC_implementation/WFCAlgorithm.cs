@@ -7,8 +7,8 @@ public class WFCAlgorithm : MonoBehaviour
 {
     public static WFCAlgorithm Instance { get; private set; }
     
-    public GridGenerator GridGenerator;
-    public Solver Solver;
+    [HideInInspector] public GridGenerator GridGenerator;
+    [HideInInspector] public Solver Solver;
 
     [Header("Map Settings")]
     [SerializeField] private bool newMapAtRuntime = false;
@@ -45,6 +45,9 @@ public class WFCAlgorithm : MonoBehaviour
     /// </summary>
     public void Execute()
     {
+        GridGenerator = new GridGenerator(this);
+        Solver = new Solver(this);
+
         GridGenerator.GenerateGrid();
         Solver.Solve();
         //return gridGenerator.Map;
