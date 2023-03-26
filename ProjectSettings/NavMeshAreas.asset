@@ -11,18 +11,18 @@ NavMeshProjectSettings:
     cost: 1
   - name: Jump
     cost: 2
-  - name: 
+  - name: Road
+    cost: 8
+  - name: Crossing
+    cost: 2
+  - name: Sidewalk
     cost: 1
-  - name: 
-    cost: 1
-  - name: 
-    cost: 1
-  - name: 
-    cost: 1
-  - name: 
-    cost: 1
-  - name: 
-    cost: 1
+  - name: Path
+    cost: 2
+  - name: Grass
+    cost: 4
+  - name: Stairs
+    cost: 2
   - name: 
     cost: 1
   - name: 
@@ -85,6 +85,8 @@ NavMeshProjectSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_SettingNames:
